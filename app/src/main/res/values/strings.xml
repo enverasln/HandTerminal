@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MobilEtiketV1.0</string>
+    <string name="stok_ad">Stok adı:</string>
+    <string name="birim_fiyat">Birim Fiyatı:</string>
+    <string name="taks_fiyat">Taks. Fiyatı:</string>
+    <string name="ind_fiyat">İnd. Fiyatı:</string>
+    <string name="sat_fiyat">Satış Fiyatı:</string>
+    <string name="beden">Beden:</string>
+    <string name="stok_kodu">Stok Kodu:</string>
+    <string name="barkod_no">Barkod numarası</string>
+    <string name="etiketi_yaz">Etiketi Yazdır</string>
+</resources>

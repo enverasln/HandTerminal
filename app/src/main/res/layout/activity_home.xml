@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_200"
+    tools:context=".HomeActivity">
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:columnCount="2"
+        app:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/buttonPrintClothes"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_print"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:onClick="buttonPrintClothesOnClick"
+            android:padding="10dp"
+            android:text="Giyim Etiket"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/buttonPrintGrocery"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_print"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:onClick="buttonPrintGroceryOnClick"
+            android:padding="10dp"
+            android:text="Market Etiket"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="1"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/buttonSearchStock"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_search"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:padding="10dp"
+            android:text="Stok\nAra"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="0"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/buttonCreateBarcodeList"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_list"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:padding="10dp"
+            android:text="Barkod Listesi\nOluştur"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="1"
+            app:layout_row="1" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_gravity="center_horizontal"
+            app:layout_columnSpan="2">
+
+            <Button
+                android:id="@+id/buttonSettings"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:background="@drawable/custom_button"
+                android:drawableTop="@drawable/ic_settings"
+                android:drawablePadding="5dp"
+                android:elevation="2dp"
+                android:padding="10dp"
+                android:text="Ayarlar"
+                android:onClick="openSettingsActivity"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_200"
+        android:translationZ="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/homePageTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            android:text="Mobil Etiket - Dudullu"
+
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

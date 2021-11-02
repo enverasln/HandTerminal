@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <RelativeLayout
+        android:id="@+id/LabelActivityTitleRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_200"
+        android:focusable="false"
+        android:orientation="horizontal"
+        android:translationZ="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/closeSettingsActivtyImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="false"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="closeSettingsActivity"
+            app:srcCompat="@drawable/ic_arrow_back"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/settginsActivityTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/closeSettingsActivtyImage"
+            android:focusable="false"
+            android:text="Ayarlar"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:columnCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/printerSettingsButton"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_print"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:onClick="openPrinterSettingsActivity"
+            android:padding="10dp"
+            android:text="Yazıcı Ayarları"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/databaseSettingsButton"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_storage"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:onClick="openDatabaseSettingsActivity"
+            android:padding="10dp"
+            android:text="Veritabanı Ayarları"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="1"
+            app:layout_row="0" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_columnSpan="2"
+            app:layout_gravity="center_horizontal"/>
+
+    </androidx.gridlayout.widget.GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

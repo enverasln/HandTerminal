@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_200"
+    tools:context=".LabelActivity">
+
+    <EditText
+        android:id="@+id/barkodText"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/custom_input"
+        android:ems="10"
+        android:hint="@string/barkod_no"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingStart="12dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        tools:ignore="TextContrastCheck" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/custom_input"
+        android:elevation="2dp"
+        android:focusable="false"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barkodText">
+
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnCount="2"
+            app:useDefaultMargins="true">
+
+            <TextView
+                android:id="@+id/stokKoduLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:gravity="end"
+                android:text="@string/stok_kodu"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="0" />
+
+            <TextView
+                android:id="@+id/stokKodutext"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="0" />
+
+            <TextView
+                android:id="@+id/stokAdiLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/stok_ad"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="1" />
+
+            <TextView
+                android:id="@+id/stokAdiText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:inputType="textMultiLine"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="1"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/bedenLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/beden"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="2" />
+
+            <TextView
+                android:id="@+id/bedenText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="2" />
+
+            <TextView
+                android:id="@+id/satisLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/sat_fiyat"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="3" />
+
+            <TextView
+                android:id="@+id/satisText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="3" />
+
+            <TextView
+                android:id="@+id/indirimLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/ind_fiyat"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="4" />
+
+            <TextView
+                android:id="@+id/indirimText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="4" />
+
+            <TextView
+                android:id="@+id/taksitLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/taks_fiyat"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="5" />
+
+            <TextView
+                android:id="@+id/taksitText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="5" />
+
+            <TextView
+                android:id="@+id/birimLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/birim_fiyat"
+                android:textAlignment="textEnd"
+                android:textColor="@color/blue_200"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_column="0"
+                app:layout_row="6" />
+
+            <TextView
+                android:id="@+id/birimText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_column="1"
+                app:layout_row="6" />
+
+        </androidx.gridlayout.widget.GridLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonPrintLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/custom_button"
+        android:focusable="false"
+        android:text="@string/etiketi_yaz"
+        android:textColor="@color/white"
+        android:translationZ="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <RelativeLayout
+        android:id="@+id/LabelActivityTitleRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_200"
+        android:focusable="false"
+        android:orientation="horizontal"
+        android:translationZ="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/closeLabelActivtyImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:clickable="true"
+            android:contentDescription="TODO"
+            android:focusable="false"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="closeLabelActivity"
+            app:srcCompat="@drawable/ic_arrow_back"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/labelActivityTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/closeLabelActivtyImage"
+            android:focusable="false"
+            android:text="Barkodsuz Kırmızı İndirim Etiketi"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintStart_toEndOf="@id/closeLabelActivtyImage" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
