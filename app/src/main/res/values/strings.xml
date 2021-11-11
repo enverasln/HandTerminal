@@ -9,4 +9,5 @@
     <string name="stok_kodu">Stok Kodu:</string>
     <string name="barkod_no">Barkod numarası</string>
     <string name="etiketi_yaz">Etiketi Yazdır</string>
+    <string name="magaza_adi">Mağaza Adı:</string>
 </resources>

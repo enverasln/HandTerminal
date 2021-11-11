@@ -1,6 +1,8 @@
 package tr.com.cetinkaya.handterminal.models;
 
-public class Stok {
+import java.io.Serializable;
+
+public class Stok implements Serializable {
     String sto_guid;
     String sto_kod;
     String sto_isim;
@@ -8,7 +10,7 @@ public class Stok {
     String sto_beden_kodu;
     String sto_mensei;
     int sto_yerli_yabanci;
-    float sto_birim3_katsayi;
+    double sto_birim3_katsayi;
     String sto_birim3_ad;
     String sto_reyon_kodu;
     String sto_create_date;
@@ -92,11 +94,11 @@ public class Stok {
         this.sto_yerli_yabanci = sto_yerli_yabanci;
     }
 
-    public float getSto_birim3_katsayi() {
+    public double getSto_birim3_katsayi() {
         return sto_birim3_katsayi;
     }
 
-    public void setSto_birim3_katsayi(float sto_birim3_katsayi) {
+    public void setSto_birim3_katsayi(double sto_birim3_katsayi) {
         this.sto_birim3_katsayi = sto_birim3_katsayi;
     }
 
@@ -130,5 +132,14 @@ public class Stok {
 
     public void setSto_lastup_date(String sto_update_date) {
         this.sto_lastup_date = sto_update_date;
+    }
+
+    @Override
+    public String toString() {
+        return "Stok{" +
+                "sto_guid='" + sto_guid + '\'' +
+                ", sto_kod='" + sto_kod + '\'' +
+                ", sto_isim='" + sto_isim + '\'' +
+                '}';
     }
 }

@@ -34,6 +34,8 @@ public class KullaniciSQLiteDao implements IKullaniciDao {
                 result = sayi;
 
             }
+            c.close();
+            sqLiteDatabase.close();
         } catch (Exception exception) {
             Log.e("[KULLANICILAR]", exception.getMessage());
         }

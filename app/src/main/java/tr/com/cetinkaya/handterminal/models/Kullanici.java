@@ -1,6 +1,8 @@
 package tr.com.cetinkaya.handterminal.models;
 
-public class Kullanici {
+import java.io.Serializable;
+
+public class Kullanici implements Serializable {
     private String kullanciadi;
     private String sifre;
     private int aktif;

@@ -1,6 +1,8 @@
 package tr.com.cetinkaya.handterminal.models;
 
-public class Depo {
+import java.io.Serializable;
+
+public class Depo implements Serializable {
     private int dep_no;
     private String dep_adi;
 

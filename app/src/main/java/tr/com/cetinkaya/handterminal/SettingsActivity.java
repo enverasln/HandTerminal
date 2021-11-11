@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import tr.com.cetinkaya.handterminal.databinding.ActivityLabelBinding;
-import tr.com.cetinkaya.handterminal.databinding.ActivityMainBinding;
 import tr.com.cetinkaya.handterminal.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -25,11 +23,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void openPrinterSettingsActivity(View view) {
-        Intent intent = new Intent(this, PrinterSettings.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, PrinterSettingsActivity.class);
+        //startActivity(intent);
     }
 
     public void openDatabaseSettingsActivity(View view) {
-
+        Intent intent = new Intent(this, UpdateDataActivity.class);
+        startActivity(intent);
     }
 }

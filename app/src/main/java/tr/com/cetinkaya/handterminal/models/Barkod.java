@@ -1,6 +1,8 @@
 package tr.com.cetinkaya.handterminal.models;
 
-public class Barkod {
+import java.io.Serializable;
+
+public class Barkod implements Serializable {
     private String bar_guid;
     private String bar_kodu;
     private Stok stok;

@@ -9,6 +9,8 @@ import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
 import tr.com.cetinkaya.handterminal.models.Depo;
 
 public class DepoSQLiteDao implements IDepoDao {
+
+
     private SQLiteDatabase sqLiteDatabase;
 
     public DepoSQLiteDao(SQLiteDatabase sqLiteDatabase) {
