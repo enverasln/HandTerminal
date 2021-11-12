@@ -7,8 +7,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="blue_100">#9ED9F6</color>
     <color name="blue_200">#1791CF</color>
     <color name="red_500">#A60D0D</color>
     <color name="gray_200">#F1F1F1</color>
     <color name="gray_500">#7E7E7E</color>
+    <color name="green_500">#38830A</color>
 </resources>
