@@ -14,6 +14,7 @@ import android.view.View;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 
 
@@ -26,27 +27,40 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Date;
-
 
 import tr.com.cetinkaya.handterminal.business.concretes.BarkodBO;
+import tr.com.cetinkaya.handterminal.business.concretes.DepoBO;
+import tr.com.cetinkaya.handterminal.business.concretes.KullaniciBO;
 import tr.com.cetinkaya.handterminal.business.concretes.StokBO;
+import tr.com.cetinkaya.handterminal.business.concretes.StokSatisFiyatBO;
 import tr.com.cetinkaya.handterminal.daos.concretes.BarkodSQLiteDao;
+import tr.com.cetinkaya.handterminal.daos.concretes.DepoSQLiteDao;
+import tr.com.cetinkaya.handterminal.daos.concretes.KullaniciSQLiteDao;
 import tr.com.cetinkaya.handterminal.daos.concretes.StokSQLiteDao;
+import tr.com.cetinkaya.handterminal.daos.concretes.StokSatisFiyatSQLiteDao;
 import tr.com.cetinkaya.handterminal.databinding.ActivityUpdateDataBinding;
 
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
 import tr.com.cetinkaya.handterminal.models.Barkod;
+import tr.com.cetinkaya.handterminal.models.Depo;
+import tr.com.cetinkaya.handterminal.models.Kullanici;
 import tr.com.cetinkaya.handterminal.models.Stok;
+import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
 
 
 public class UpdateDataActivity extends AppCompatActivity {
+    private SharedPreferences sharedPreferences;
+    private int etiketDepoNo;
+    private int depoNo;
+
     private SQLiteHelper sqLiteHelper;
     private SQLiteDatabase db;
     private StokBO stokBO;
     private BarkodBO barkodBO;
+    private DepoBO depoBO;
+    private KullaniciBO kullaniciBO;
+    private StokSatisFiyatBO stokSatisFiyatBO;
     private final String TAG = "UpdateDataActivity";
-    int count = 0;
     private ActivityUpdateDataBinding binding;
 
 
@@ -57,23 +71,61 @@ public class UpdateDataActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
+        sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
         binding.magazaAdiTitleText.setText(sharedPreferences.getString("userDepo", ""));
+
+        etiketDepoNo = 24;
+        depoNo = sharedPreferences.getInt("depoNo", 0);
+
 
         sqLiteHelper = new SQLiteHelper(this);
         db = sqLiteHelper.getWritableDatabase();
+
         stokBO = new StokBO(new StokSQLiteDao(db));
         barkodBO = new BarkodBO(new BarkodSQLiteDao(db));
+        depoBO = new DepoBO(new DepoSQLiteDao(db));
+        kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
+        stokSatisFiyatBO = new StokSatisFiyatBO(new StokSatisFiyatSQLiteDao(db));
 
-        makeInvisibleInformationLabel();
+        makeInvisibleInformationLabels();
     }
 
-    private void makeInvisibleInformationLabel() {
+    private void makeInvisibleInformationLabels() {
         binding.aktarimDurumuLabel.setVisibility(View.GONE);
         binding.stokAktarimAdetText.setVisibility(View.GONE);
         binding.barkodAktarimAdetText.setVisibility(View.GONE);
         binding.fiyatAktarimAdetText.setVisibility(View.GONE);
         binding.depoAktarimAdetText.setVisibility(View.GONE);
+
+        binding.aktarimDurumuLabel.setText("Aktarım Yapılıyor");
+        binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.red_500));
+        binding.stokAktarimAdetText.setText("");
+        binding.barkodAktarimAdetText.setText("");
+        binding.fiyatAktarimAdetText.setText("");
+        binding.depoAktarimAdetText.setText("");
+    }
+
+    private void makeVisibleInformationLabels() {
+
+        if (binding.stokCheckBox.isChecked()) {
+            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+            binding.stokAktarimAdetText.setVisibility(View.VISIBLE);
+        }
+
+        if (binding.barkodCheckBox.isChecked()) {
+            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+            binding.barkodAktarimAdetText.setVisibility(View.VISIBLE);
+        }
+
+        if (binding.fiyatCheckBox.isChecked()) {
+            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+            binding.fiyatAktarimAdetText.setVisibility(View.VISIBLE);
+        }
+
+        if(binding.depoCheckBox.isChecked()) {
+            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+            binding.depoAktarimAdetText.setVisibility(View.VISIBLE);
+        }
     }
 
     public void closeActivity(View view) {
@@ -82,44 +134,46 @@ public class UpdateDataActivity extends AppCompatActivity {
 
     public void updateData(View view) {
 
-        makeInvisibleInformationLabel();
-        binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+        makeInvisibleInformationLabels();
 
-        if (binding.stokCheckBox.isChecked()) {
-            binding.stokAktarimAdetText.setVisibility(View.VISIBLE);
-        }
-
-        if(binding.barkodCheckBox.isChecked()) {
-            binding.barkodAktarimAdetText.setVisibility(View.VISIBLE);
-        }
+        makeVisibleInformationLabels();
 
         if (binding.stokCheckBox.isChecked()) {
 
             String stoLastupDate = stokBO.getLastupDate();
             new GettingAllStok(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/stoklar");
+
         } else if (binding.barkodCheckBox.isChecked()) {
-            String stoLastupDate = barkodBO.getLastupDate();
-            new GettingAllBarkod(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+
+            String barLastupDate = barkodBO.getLastupDate();
+            new GettingAllBarkod(barLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+
         } else if (binding.fiyatCheckBox.isChecked()) {
 
+            String sfiyatLastupDate = stokSatisFiyatBO.getLastupDate();
+            new GettingAllEtiketDepoFiyat(sfiyatLastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+
+        } else if (binding.depoCheckBox.isChecked()) {
+            new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
         }
 
     }
+
 
     public class GettingAllStok extends AsyncTask<String, Integer, Boolean> {
         private final String TAG = "ServerConnection";
 
         private int page;
         private int count;
-        private String lastUpdate;
+        private String lastupDate;
         private String jsonStr;
 
-        public GettingAllStok(String lastUpdate, int page, int count) {
-            this.lastUpdate = lastUpdate;
+        public GettingAllStok(String lastupDate, int page, int count) {
+            this.lastupDate = lastupDate;
             this.count = count;
             this.page = page;
             this.jsonStr = "{" +
-                    "\"sto_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"sto_lastup_date\": \"" + lastupDate + "\"," +
                     "\"page_number\": " + page + "}";
         }
 
@@ -203,29 +257,33 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.stokAktarimAdetText.setText("Stok tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
+            binding.stokAktarimAdetText.setText("Stok tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllStok(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
+                new GettingAllStok(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
             } else {
                 if (count != 0) {
-                    binding.stokAktarimAdetText.setText(count + " adet stok kaydı güncellendi. Aktarım tamamlandı.");
+                    binding.stokAktarimAdetText.setText(count + " adet stok kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
                     binding.stokAktarimAdetText.setText("Stok tablosu hali hazırda güncel durumdadır.");
                 }
 
                 if (binding.barkodCheckBox.isChecked()) {
-                    new GettingAllBarkod(lastUpdate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+                    String lastupDate = barkodBO.getLastupDate();
+                    new GettingAllBarkod(lastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+                } else if (binding.fiyatCheckBox.isChecked()) {
+                    String lastupDate = stokSatisFiyatBO.getLastupDate();
+                    new GettingAllEtiketDepoFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+                } else if(binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
                 }
             }
 
         }
-
-
     }
 
     public class GettingAllBarkod extends AsyncTask<String, Integer, Boolean> {
@@ -233,15 +291,15 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         private int page;
         private int count;
-        private String lastUpdate;
+        private String lastupDate;
         private String jsonStr;
 
-        public GettingAllBarkod(String lastUpdate, int page, int count) {
-            this.lastUpdate = lastUpdate;
+        public GettingAllBarkod(String lastupDate, int page, int count) {
+            this.lastupDate = lastupDate;
             this.count = count;
             this.page = page;
             this.jsonStr = "{" +
-                    "\"bar_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"bar_lastup_date\": \"" + lastupDate + "\"," +
                     "\"page_number\": " + page + "}";
         }
 
@@ -330,41 +388,52 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
+            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
             } else {
                 if (count != 0) {
-                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
+                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
                     binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
                 }
 
-
+                if (binding.fiyatCheckBox.isChecked()) {
+                    String lastupDate = stokSatisFiyatBO.getLastupDate();
+                    new GettingAllEtiketDepoFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+                } else if(binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                }
             }
 
         }
     }
 
-    public class GettingAllEtiketFiyat extends AsyncTask<String, Integer, Boolean> {
+    public class GettingAllEtiketDepoFiyat extends AsyncTask<String, Integer, Boolean> {
         private final String TAG = "ServerConnection";
 
         private int page;
+        private int etiketDepo;
+        private int depo;
         private int count;
         private String lastUpdate;
         private String jsonStr;
 
-        public GettingAllEtiketFiyat(String lastUpdate, int page, int count) {
+        public GettingAllEtiketDepoFiyat(String lastUpdate, int page, int etiketDepo, int depo, int count) {
             this.lastUpdate = lastUpdate;
             this.count = count;
             this.page = page;
+            this.etiketDepo = etiketDepo;
+            this.depo = depo;
             this.jsonStr = "{" +
-                    "\"bar_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"sfiyat_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"etiketDepo\": \"" + etiketDepo + "\"," +
+                    "\"depo\": \"" + depo + "\"," +
                     "\"page_number\": " + page + "}";
         }
 
@@ -400,28 +469,22 @@ public class UpdateDataActivity extends AppCompatActivity {
 
                     // Save the barkod to the database
                     for (int i = 0; i < stokJSONArray.length(); i++) {
-                        Barkod newBarkod = new Barkod();
-                        JSONObject barkod = stokJSONArray.getJSONObject(i);
-                        newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
-                        newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
-                        newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
-                        newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
-                        newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
-                        newBarkod.setBar_create_date(barkod.getString(SQLiteHelper.BAR_CREATE_DATE)
-                                .replace("T", " ")
-                                .replace("Z", ""));
-                        newBarkod.setBar_lastup_date(barkod.getString(SQLiteHelper.BAR_LASTUP_DATE)
-                                .replace("T", " ")
-                                .replace("Z", ""));
+                        JSONObject sfiyat = stokJSONArray.getJSONObject(i);
+                        StokSatisFiyat newSFiyat = new StokSatisFiyat();
 
-                        // Get Stok information from JsonObject
-                        Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
-
-                        newBarkod.setStok(stok);
+                        newSFiyat.setSfiyat_guid(sfiyat.getString(SQLiteHelper.SFIYAT_GUID));
+                        Stok stok = stokBO.getStokByStokKod(sfiyat.getString(SQLiteHelper.SFIYAT_STOKKOD));
+                        newSFiyat.setStok(stok);
+                        newSFiyat.setSfiyat_listesirano(sfiyat.getInt(SQLiteHelper.SFIYAT_LISTESIRANO));
+                        newSFiyat.setSfiyat_birim_pntr(sfiyat.getInt(SQLiteHelper.SFIYAT_BIRIM_PNTR));
+                        Depo depo = depoBO.getDepoById(sfiyat.getInt(SQLiteHelper.SFIYAT_DEPOSIRANO));
+                        newSFiyat.setDepo(depo);
+                        newSFiyat.setSfiyat_create_date(sfiyat.getString(SQLiteHelper.SFIYAT_CREATE_DATE).replace("T", " ").replace("Z", ""));
+                        newSFiyat.setSfiyat_lastup_date(sfiyat.getString(SQLiteHelper.SFIYAT_LASTUP_DATE).replace("T", " ").replace("Z", ""));
 
 
-                        if (barkodBO.updateBarkod(newBarkod) == 0) {
-                            barkodBO.insertBarkod(newBarkod);
+                        if (stokSatisFiyatBO.updateSatifFiyat(newSFiyat) == 0) {
+                            stokSatisFiyatBO.insertSatisFiyat(newSFiyat);
                             count++;
                             publishProgress(count);
                         } else {
@@ -453,44 +516,37 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
+            binding.fiyatAktarimAdetText.setText("Fiyat tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+                new GettingAllEtiketDepoFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.127.2.194:3000/db/fiyatlar");
             } else {
                 if (count != 0) {
-                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
+                    binding.fiyatAktarimAdetText.setText(count + " adet fiyat kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
-                    binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
+                    binding.fiyatAktarimAdetText.setText("Fiyat tablosu hali hazırda güncel durumdadır.");
                 }
-
+                if(binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                }
 
             }
 
         }
     }
 
-    public class GettingAllIndirimFiyat extends AsyncTask<String, Integer, Boolean> {
-        private final String TAG = "ServerConnection";
+    public class GettingAllDepo extends AsyncTask<String, Integer, Boolean> {
+        private final String TAG = "DepoConnection";
 
-        private int page;
         private int count;
-        private String lastUpdate;
-        private String jsonStr;
 
-        public GettingAllIndirimFiyat(String lastUpdate, int page, int count) {
-            this.lastUpdate = lastUpdate;
+        public GettingAllDepo(int count) {
             this.count = count;
-            this.page = page;
-            this.jsonStr = "{" +
-                    "\"bar_lastup_date\": \"" + lastUpdate + "\"," +
-                    "\"page_number\": " + page + "}";
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -501,14 +557,10 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... urls) {
 
             try {
-                StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
-                requestEntity.setContentType("application/json");
-                HttpPost httpPost = new HttpPost(urls[0]);
-                httpPost.setEntity(requestEntity);
-                HttpClient httpClient = new DefaultHttpClient();
 
-                //httpPost.addHeader("Content-Type","application/json");
-                HttpResponse response = httpClient.execute(httpPost);
+                HttpGet httpGet = new HttpGet(urls[0]);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpResponse response = httpClient.execute(httpGet);
 
                 int status = response.getStatusLine().getStatusCode();
                 if (status == 200) {
@@ -523,28 +575,14 @@ public class UpdateDataActivity extends AppCompatActivity {
 
                     // Save the barkod to the database
                     for (int i = 0; i < stokJSONArray.length(); i++) {
-                        Barkod newBarkod = new Barkod();
-                        JSONObject barkod = stokJSONArray.getJSONObject(i);
-                        newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
-                        newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
-                        newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
-                        newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
-                        newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
-                        newBarkod.setBar_create_date(barkod.getString(SQLiteHelper.BAR_CREATE_DATE)
-                                .replace("T", " ")
-                                .replace("Z", ""));
-                        newBarkod.setBar_lastup_date(barkod.getString(SQLiteHelper.BAR_LASTUP_DATE)
-                                .replace("T", " ")
-                                .replace("Z", ""));
-
-                        // Get Stok information from JsonObject
-                        Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
-
-                        newBarkod.setStok(stok);
+                        JSONObject depo = stokJSONArray.getJSONObject(i);
+                        Depo newDepo = new Depo();
+                        newDepo.setDep_no(depo.getInt(SQLiteHelper.DEP_NO));
+                        newDepo.setDep_adi(depo.getString(SQLiteHelper.DEP_ADI));
 
 
-                        if (barkodBO.updateBarkod(newBarkod) == 0) {
-                            barkodBO.insertBarkod(newBarkod);
+                        if (depoBO.updateDepo(newDepo) == 0) {
+                            depoBO.insertDepo(newDepo);
                             count++;
                             publishProgress(count);
                         } else {
@@ -576,25 +614,111 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
+            binding.depoAktarimAdetText.setText("Depo tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            if (result) {
-                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
-            } else {
-                if (count != 0) {
-                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
-                } else {
-                    binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
-                }
-
-
+            if (count != 0) {
+                binding.depoAktarimAdetText.setText(count + " adet depo kaydı güncellendi. \nAktarım tamamlandı.\n");
+                new GettingAllKullanici(0).execute("http://192.127.2.194:3000/db/kullanicilar");
             }
-
         }
     }
 
+    public class GettingAllKullanici extends AsyncTask<String, Integer, Boolean> {
+        private final String TAG = "DepoConnection";
+
+        private int count;
+
+        public GettingAllKullanici(int count) {
+            this.count = count;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... urls) {
+
+            try {
+
+                HttpGet httpGet = new HttpGet(urls[0]);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpResponse response = httpClient.execute(httpGet);
+
+                int status = response.getStatusLine().getStatusCode();
+                if (status == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    String data = EntityUtils.toString(responseEntity);
+
+                    JSONObject jsonObject = new JSONObject(data);
+                    JSONArray stokJSONArray = jsonObject.getJSONArray("data");
+                    if (stokJSONArray.length() == 0) {
+                        return false;
+                    }
+
+                    // Save the barkod to the database
+                    for (int i = 0; i < stokJSONArray.length(); i++) {
+                        JSONObject kullanici = stokJSONArray.getJSONObject(i);
+                        Kullanici newKullanici = new Kullanici();
+
+                        newKullanici.setKullanciadi(kullanici.getString(SQLiteHelper.KULLANICI_ADI));
+                        newKullanici.setSifre(kullanici.getString(SQLiteHelper.SIFRE));
+                        newKullanici.setAktif(kullanici.getInt(SQLiteHelper.AKTIF));
+
+                        Depo  depo = depoBO.getDepoById(kullanici.getInt(SQLiteHelper.DEPO_NO));
+                        newKullanici.setDepo(depo);
+
+                        if (kullaniciBO.updateKullanici(newKullanici) == 0) {
+                            kullaniciBO.insertKullanici(newKullanici);
+                            count++;
+                            publishProgress(count);
+                        } else {
+                            count++;
+                            publishProgress(count);
+                        }
+                    }
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
+                } else if (status == 404) {
+                    HttpEntity entity = response.getEntity();
+                    String data = EntityUtils.toString(entity);
+
+                    JSONObject jsonObject = new JSONObject(data);
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
+                }
+
+            } catch (IOException exception) {
+                exception.printStackTrace();
+                return false;
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+                return false;
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            binding.depoAktarimAdetText.setText("Kullanıcı tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (count != 0) {
+                binding.depoAktarimAdetText.setText(count + " adet kullanıcı kaydı güncellendi. \nAktarım tamamlandı.");
+                binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
+                db.close();
+            }
+        }
+
+    }
 }
+

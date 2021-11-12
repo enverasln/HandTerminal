@@ -10,25 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
-
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 import tr.com.cetinkaya.handterminal.business.concretes.KullaniciBO;
 import tr.com.cetinkaya.handterminal.daos.concretes.KullaniciSQLiteDao;
 import tr.com.cetinkaya.handterminal.databinding.ActivityMainBinding;
 import tr.com.cetinkaya.handterminal.helpers.Helper;
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
-import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.Kullanici;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             int requestCode = 200;
             requestPermissions(permissions, requestCode);
         }
+
 
         loadDatabase();
         //kullaniciGetir();

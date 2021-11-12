@@ -1,5 +1,6 @@
 package tr.com.cetinkaya.handterminal.daos.concretes;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -11,6 +12,7 @@ import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
 
 public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
+    private final String TAG = "SatisFiyat";
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -52,7 +54,7 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
             }
             c.close();
         } catch (Exception exception) {
-            Log.e("[STOK_SATIS_FIYAT]", exception.getMessage());
+            Log.e(TAG, exception.getMessage());
         }
         return stokSatisFiyat;
 
@@ -91,7 +93,7 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
             }
             c.close();
         } catch (Exception exception) {
-            Log.e("[STOK_SATIS_FIYAT]", exception.getMessage());
+            Log.e(TAG, exception.getMessage());
         }
         return stokSatisFiyat;
     }
@@ -129,8 +131,70 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
             }
             c.close();
         } catch (Exception exception) {
-            Log.e("[STOK_SATIS_FIYAT]", exception.getMessage());
+            Log.e(TAG, exception.getMessage());
         }
         return stokSatisFiyat;
+    }
+
+    @Override
+    public String getLastupDate() {
+        String lastupDate = "";
+        try {
+            String sql = "SELECT MAX(sfiyat_lastup_date) AS SAYI FROM STOK_SATIS_FIYAT_LISTELERI";
+
+            Cursor c;
+            c = sqLiteDatabase.rawQuery(sql, null);
+            if (c == null || c.getCount() == 0) {
+                lastupDate = "";
+            } else {
+                c.moveToFirst();
+                String tarih = c.getString(0);
+                lastupDate = tarih;
+
+            }
+            c.close();
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+        return lastupDate;
+    }
+
+    @Override
+    public int updateSatifFiyat(StokSatisFiyat satisFiyat) {
+        int result = 0;
+        try {
+            ContentValues values = getContentValues(satisFiyat);
+            result = sqLiteDatabase.update(SQLiteHelper.STOK_SATIS_FIYAT_LISTELERI, values, "sfiyat_guid = ?", new String[]{satisFiyat.getSfiyat_guid()});
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void insertSatisFiyat(StokSatisFiyat satisFiyat) {
+        try {
+            ContentValues values = getContentValues(satisFiyat);
+            sqLiteDatabase.insert(SQLiteHelper.STOK_SATIS_FIYAT_LISTELERI, null, values);
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+    }
+
+
+    private ContentValues getContentValues(StokSatisFiyat stokSatisFiyat) {
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.SFIYAT_GUID, stokSatisFiyat.getSfiyat_guid());
+        values.put(SQLiteHelper.SFIYAT_STOKKOD, stokSatisFiyat.getStok().getSto_kod());
+        values.put(SQLiteHelper.SFIYAT_LISTESIRANO, stokSatisFiyat.getSfiyat_listesirano());
+        values.put(SQLiteHelper.SFIYAT_BIRIM_PNTR, stokSatisFiyat.getSfiyat_birim_pntr());
+        values.put(SQLiteHelper.SFIYAT_DEPOSIRANO, stokSatisFiyat.getDepo().getDep_no());
+        values.put(SQLiteHelper.SFIYAT_FIYATI, stokSatisFiyat.getSfiyat_fiyati());
+        values.put(SQLiteHelper.SFIYAT_CREATE_DATE, stokSatisFiyat.getSfiyat_create_date());
+        values.put(SQLiteHelper.SFIYAT_LASTUP_DATE, stokSatisFiyat.getSfiyat_lastup_date());
+
+        return values;
     }
 }

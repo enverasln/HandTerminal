@@ -1,5 +1,6 @@
 package tr.com.cetinkaya.handterminal.daos.concretes;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -7,9 +8,10 @@ import android.util.Log;
 import tr.com.cetinkaya.handterminal.daos.abstracts.IDepoDao;
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
 import tr.com.cetinkaya.handterminal.models.Depo;
+import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
 
 public class DepoSQLiteDao implements IDepoDao {
-
+    private final String TAG = "Depo";
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -42,5 +44,38 @@ public class DepoSQLiteDao implements IDepoDao {
             Log.e("[DEPOLAR]", exception.getMessage());
         }
         return depo;
+    }
+
+    @Override
+    public int updateDepo(Depo depo) {
+        int result = 0;
+        try {
+            ContentValues values = getContentValues(depo);
+            result = sqLiteDatabase.update(SQLiteHelper.DEPOLAR, values, "dep_no = ?", new String[]{Integer.toString(depo.getDep_no())});
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void insertDepo(Depo depo) {
+        try {
+            ContentValues values = getContentValues(depo);
+            sqLiteDatabase.insert(SQLiteHelper.DEPOLAR, null, values);
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+    }
+
+
+    private ContentValues getContentValues(Depo depo) {
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.DEP_NO, depo.getDep_no());
+        values.put(SQLiteHelper.DEP_ADI, depo.getDep_adi());
+
+        return values;
     }
 }
