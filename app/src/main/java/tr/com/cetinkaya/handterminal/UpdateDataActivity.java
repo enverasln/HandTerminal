@@ -3,6 +3,7 @@ package tr.com.cetinkaya.handterminal;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,6 +57,9 @@ public class UpdateDataActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        SharedPreferences sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
+        binding.magazaAdiTitleText.setText(sharedPreferences.getString("userDepo", ""));
+
         sqLiteHelper = new SQLiteHelper(this);
         db = sqLiteHelper.getWritableDatabase();
         stokBO = new StokBO(new StokSQLiteDao(db));
@@ -65,11 +69,11 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     private void makeInvisibleInformationLabel() {
-        binding.stokAktarimAdetLabel.setVisibility(View.GONE);
-        binding.stokAktarimAdetText.setText("");
-        binding.barkodAktarimAdetLabel.setVisibility(View.GONE);
-        binding.fiyatAktarimAdetLabel.setVisibility(View.GONE);
-        binding.depoAktarimAdetLabel.setVisibility(View.GONE);
+        binding.aktarimDurumuLabel.setVisibility(View.GONE);
+        binding.stokAktarimAdetText.setVisibility(View.GONE);
+        binding.barkodAktarimAdetText.setVisibility(View.GONE);
+        binding.fiyatAktarimAdetText.setVisibility(View.GONE);
+        binding.depoAktarimAdetText.setVisibility(View.GONE);
     }
 
     public void closeActivity(View view) {
@@ -77,14 +81,27 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     public void updateData(View view) {
+
         makeInvisibleInformationLabel();
+        binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+
+        if (binding.stokCheckBox.isChecked()) {
+            binding.stokAktarimAdetText.setVisibility(View.VISIBLE);
+        }
+
+        if(binding.barkodCheckBox.isChecked()) {
+            binding.barkodAktarimAdetText.setVisibility(View.VISIBLE);
+        }
+
         if (binding.stokCheckBox.isChecked()) {
 
             String stoLastupDate = stokBO.getLastupDate();
             new GettingAllStok(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/stoklar");
-        } else if(binding.barkodCheckBox.isChecked()) {
-            //String stoLastupDate = barkodBO.getLastupDate();
-            //new GettingAllBarkod(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+        } else if (binding.barkodCheckBox.isChecked()) {
+            String stoLastupDate = barkodBO.getLastupDate();
+            new GettingAllBarkod(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+        } else if (binding.fiyatCheckBox.isChecked()) {
+
         }
 
     }
@@ -108,10 +125,6 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            if(binding.stokCheckBox.isChecked()) {
-                binding.stokAktarimAdetLabel.setVisibility(View.VISIBLE);
-                binding.stokAktarimAdetText.setVisibility(View.VISIBLE);
-            }
             super.onPreExecute();
         }
 
@@ -190,7 +203,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.stokAktarimAdetText.setText( values[0] + " adet stok güncellendi.");
+            binding.stokAktarimAdetText.setText("Stok tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
@@ -199,9 +212,14 @@ public class UpdateDataActivity extends AppCompatActivity {
             if (result) {
                 new GettingAllStok(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
             } else {
-                binding.stokAktarimAdetText.setText(binding.stokAktarimAdetText.getText().toString() + " Aktarım tamamlandı.");
-                if(binding.barkodCheckBox.isChecked()) {
-                    //new GettingAllBarkod(lastUpdate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+                if (count != 0) {
+                    binding.stokAktarimAdetText.setText(count + " adet stok kaydı güncellendi. Aktarım tamamlandı.");
+                } else {
+                    binding.stokAktarimAdetText.setText("Stok tablosu hali hazırda güncel durumdadır.");
+                }
+
+                if (binding.barkodCheckBox.isChecked()) {
+                    new GettingAllBarkod(lastUpdate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
                 }
             }
 
@@ -209,7 +227,6 @@ public class UpdateDataActivity extends AppCompatActivity {
 
 
     }
-
 
     public class GettingAllBarkod extends AsyncTask<String, Integer, Boolean> {
         private final String TAG = "ServerConnection";
@@ -258,11 +275,26 @@ public class UpdateDataActivity extends AppCompatActivity {
                         return false;
                     }
 
-                    // Save the stok to the database
+                    // Save the barkod to the database
                     for (int i = 0; i < stokJSONArray.length(); i++) {
                         Barkod newBarkod = new Barkod();
                         JSONObject barkod = stokJSONArray.getJSONObject(i);
-                        newBarkod.setBar_guid(barkod.getString("bar_guid"));
+                        newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
+                        newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
+                        newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
+                        newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
+                        newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
+                        newBarkod.setBar_create_date(barkod.getString(SQLiteHelper.BAR_CREATE_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+                        newBarkod.setBar_lastup_date(barkod.getString(SQLiteHelper.BAR_LASTUP_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+
+                        // Get Stok information from JsonObject
+                        Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
+
+                        newBarkod.setStok(stok);
 
 
                         if (barkodBO.updateBarkod(newBarkod) == 0) {
@@ -298,297 +330,271 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.countText.setText("Count: " + values[0]);
+            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllStok(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
+                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
             } else {
-                Log.d(TAG, new Date().toString());
+                if (count != 0) {
+                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
+                } else {
+                    binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
+                }
+
+
             }
 
         }
     }
 
+    public class GettingAllEtiketFiyat extends AsyncTask<String, Integer, Boolean> {
+        private final String TAG = "ServerConnection";
 
+        private int page;
+        private int count;
+        private String lastUpdate;
+        private String jsonStr;
 
-
-
-    /*private void getAllStockCount(VolleyCallBack callback, String lastupDate) {
-        String url = String.format("%s/db/stoklar/toplam-sayi", Helper.API_URL);
-        try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("sto_lastup_date", lastupDate);
-            final String mRequestBody = jsonBody.toString();
-
-            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.e("Cevap", response);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        callback.onSuccess(jsonArray);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Cevap", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            Volley.newRequestQueue(this).add(istek);
-        } catch (JSONException exception) {
-            exception.printStackTrace();
+        public GettingAllEtiketFiyat(String lastUpdate, int page, int count) {
+            this.lastUpdate = lastUpdate;
+            this.count = count;
+            this.page = page;
+            this.jsonStr = "{" +
+                    "\"bar_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"page_number\": " + page + "}";
         }
 
 
-    }*/
-
-    /*private void getAllStokByLastupDate(VolleyCallBack callBack, String lastupDate, int pageNumber) {
-        final List<Stok> stokList = new ArrayList<>();
-        String url = String.format("%s/db/stoklar", Helper.API_URL);
-        try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("sto_lastup_date", lastupDate);
-            jsonBody.put("page_number", 1);
-            final String mRequestBody = jsonBody.toString();
-
-            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.e("Cevap", response);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-
-                        JSONArray stokJsonArray = jsonObject.getJSONArray("data");
-                        callBack.onSuccess(stokJsonArray);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Cevap", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            Volley.newRequestQueue(this).add(istek);
-        } catch (JSONException exception) {
-            exception.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
-    }*/
+        @Override
+        protected Boolean doInBackground(String... urls) {
 
-    /*private int getAllStockCount(String lastupDate) {
-        String url = String.format("%s/db/stoklar/toplam-sayi", Helper.API_URL);
-        final int totalCount[] = {0};
-        try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("sto_lastup_date", lastupDate);
-            final String mRequestBody = jsonBody.toString();
+            try {
+                StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
+                requestEntity.setContentType("application/json");
+                HttpPost httpPost = new HttpPost(urls[0]);
+                httpPost.setEntity(requestEntity);
+                HttpClient httpClient = new DefaultHttpClient();
 
-            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.e("Cevap", response);
+                //httpPost.addHeader("Content-Type","application/json");
+                HttpResponse response = httpClient.execute(httpPost);
 
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
+                int status = response.getStatusLine().getStatusCode();
+                if (status == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    String data = EntityUtils.toString(responseEntity);
 
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        totalCount[0] = jsonArray.getJSONObject(0).getInt("toplamSayi");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    JSONObject jsonObject = new JSONObject(data);
+                    JSONArray stokJSONArray = jsonObject.getJSONArray("data");
+                    if (stokJSONArray.length() == 0) {
+                        return false;
                     }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Cevap", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
 
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            Volley.newRequestQueue(this).add(istek);
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
+                    // Save the barkod to the database
+                    for (int i = 0; i < stokJSONArray.length(); i++) {
+                        Barkod newBarkod = new Barkod();
+                        JSONObject barkod = stokJSONArray.getJSONObject(i);
+                        newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
+                        newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
+                        newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
+                        newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
+                        newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
+                        newBarkod.setBar_create_date(barkod.getString(SQLiteHelper.BAR_CREATE_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+                        newBarkod.setBar_lastup_date(barkod.getString(SQLiteHelper.BAR_LASTUP_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+
+                        // Get Stok information from JsonObject
+                        Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
+
+                        newBarkod.setStok(stok);
 
 
-        return totalCount[0];
-    }
-
-    private List<Stok> getAllStokByLastupDate(VolleyCallBack callBack, String lastupDate, int pageNumber) {
-        binding.countText.setText("Güncelleme Başadı");
-        final List<Stok> stokList = new ArrayList<>();
-        String url = String.format("%s/db/stoklar", Helper.API_URL);
-        try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("sto_lastup_date", lastupDate);
-            jsonBody.put("page_number", 1);
-            final String mRequestBody = jsonBody.toString();
-
-            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.e("Cevap", response);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        List<Stok> stokList = new ArrayList<>();
-                        JSONArray stokJsonArray = jsonObject.getJSONArray("data");
-                        for (int i = 0; i < stokJsonArray.length(); i++) {
-                            JSONObject stok = stokJsonArray.getJSONObject(i);
-                            SQLiteHelper sqLiteHelper = new SQLiteHelper(UpdateDataActivity.this);
-                            SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
-                            StokBO stokBO = new StokBO(new StokSQLiteDao(db));
-                            Stok newStok = new Stok();
-                            newStok.setSto_guid(stok.getString("sto_guid"));
-                            newStok.setSto_kod(stok.getString("sto_kod"));
-                            newStok.setSto_isim(stok.getString("sto_isim"));
-                            newStok.setSto_kisa_ismi(stok.getString("sto_kisa_ismi"));
-                            newStok.setSto_beden_kodu(stok.getString("sto_beden_kodu"));
-                            newStok.setSto_mensei(stok.getString("sto_mensei"));
-                            newStok.setSto_yerli_yabanci(stok.getInt("sto_yerli_yabanci"));
-                            newStok.setSto_birim3_katsayi(stok.getDouble("sto_birim3_katsayi"));
-                            newStok.setSto_birim3_ad(stok.getString("sto_birim3_ad"));
-                            newStok.setSto_reyon_kodu(stok.getString("sto_reyon_kodu"));
-                            newStok.setSto_create_date(stok.getString("sto_create_date"));
-                            newStok.setSto_lastup_date(stok.getString("sto_lastup_date"));
-                            stokList.add(newStok);
+                        if (barkodBO.updateBarkod(newBarkod) == 0) {
+                            barkodBO.insertBarkod(newBarkod);
+                            count++;
+                            publishProgress(count);
+                        } else {
+                            count++;
+                            publishProgress(count);
                         }
-                        callBack.onSuccess(stokList);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
+                } else if (status == 404) {
+                    HttpEntity entity = response.getEntity();
+                    String data = EntityUtils.toString(entity);
+
+                    JSONObject jsonObject = new JSONObject(data);
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Cevap", error.toString());
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
 
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            Volley.newRequestQueue(this).add(istek);
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-
-        return stokList;
-
-    }*/
-
-
-    /*private class GetAllStok extends AsyncTask<List<Stok>, Integer, Boolean> {
-
-        @SuppressLint("WrongThread")
-        @Override
-        protected Boolean doInBackground(List<Stok>... params) {
-            count= 0;
-            for (Stok stok : params[0]) {
-                count++;
-                if(stokBO.updateStok(stok) == 0) {
-                    stokBO.insertStok(stok);
-                }
-                //onProgressUpdate(count);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+                return false;
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+                return false;
             }
 
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            binding.countText.setText("Başarılı");
-            super.onPostExecute(aBoolean);
+            return false;
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            binding.countText.setText( Integer.toString(values[0]));
-
-            super.onProgressUpdate(values);
+            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
         }
 
         @Override
-        protected void onCancelled() {
-            System.out.println("İptal Edildi.");
-            super.onCancelled();
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result) {
+                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+            } else {
+                if (count != 0) {
+                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
+                } else {
+                    binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
+                }
+
+
+            }
+
         }
     }
 
+    public class GettingAllIndirimFiyat extends AsyncTask<String, Integer, Boolean> {
+        private final String TAG = "ServerConnection";
 
-    public interface VolleyCallBack {
-        void onSuccess(List<Stok> stokList);
-    }*/
+        private int page;
+        private int count;
+        private String lastUpdate;
+        private String jsonStr;
+
+        public GettingAllIndirimFiyat(String lastUpdate, int page, int count) {
+            this.lastUpdate = lastUpdate;
+            this.count = count;
+            this.page = page;
+            this.jsonStr = "{" +
+                    "\"bar_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"page_number\": " + page + "}";
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... urls) {
+
+            try {
+                StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
+                requestEntity.setContentType("application/json");
+                HttpPost httpPost = new HttpPost(urls[0]);
+                httpPost.setEntity(requestEntity);
+                HttpClient httpClient = new DefaultHttpClient();
+
+                //httpPost.addHeader("Content-Type","application/json");
+                HttpResponse response = httpClient.execute(httpPost);
+
+                int status = response.getStatusLine().getStatusCode();
+                if (status == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    String data = EntityUtils.toString(responseEntity);
+
+                    JSONObject jsonObject = new JSONObject(data);
+                    JSONArray stokJSONArray = jsonObject.getJSONArray("data");
+                    if (stokJSONArray.length() == 0) {
+                        return false;
+                    }
+
+                    // Save the barkod to the database
+                    for (int i = 0; i < stokJSONArray.length(); i++) {
+                        Barkod newBarkod = new Barkod();
+                        JSONObject barkod = stokJSONArray.getJSONObject(i);
+                        newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
+                        newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
+                        newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
+                        newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
+                        newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
+                        newBarkod.setBar_create_date(barkod.getString(SQLiteHelper.BAR_CREATE_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+                        newBarkod.setBar_lastup_date(barkod.getString(SQLiteHelper.BAR_LASTUP_DATE)
+                                .replace("T", " ")
+                                .replace("Z", ""));
+
+                        // Get Stok information from JsonObject
+                        Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
+
+                        newBarkod.setStok(stok);
+
+
+                        if (barkodBO.updateBarkod(newBarkod) == 0) {
+                            barkodBO.insertBarkod(newBarkod);
+                            count++;
+                            publishProgress(count);
+                        } else {
+                            count++;
+                            publishProgress(count);
+                        }
+                    }
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
+                } else if (status == 404) {
+                    HttpEntity entity = response.getEntity();
+                    String data = EntityUtils.toString(entity);
+
+                    JSONObject jsonObject = new JSONObject(data);
+                    Log.d(TAG, jsonObject.toString());
+                    return true;
+                }
+
+            } catch (IOException exception) {
+                exception.printStackTrace();
+                return false;
+            } catch (JSONException exception) {
+                exception.printStackTrace();
+                return false;
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. Güncellenen kayıt sayısı: " + values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result) {
+                new GettingAllBarkod(lastUpdate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+            } else {
+                if (count != 0) {
+                    binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. Aktarım tamamlandı.");
+                } else {
+                    binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
+                }
+
+
+            }
+
+        }
+    }
+
 }
