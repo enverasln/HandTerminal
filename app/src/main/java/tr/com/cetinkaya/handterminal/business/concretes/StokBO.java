@@ -27,4 +27,11 @@ public class StokBO implements IStokBO {
     public int updateStok(Stok stok) {
         return stokDao.updateStok(stok);
     }
+
+    @Override
+    public Stok getStokByStokKod(String stokKod) {
+        return stokDao.getStokByStokKod(stokKod);
+    }
+
+
 }

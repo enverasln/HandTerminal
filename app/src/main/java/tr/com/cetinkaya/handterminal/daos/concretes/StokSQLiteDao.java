@@ -68,6 +68,60 @@ public class StokSQLiteDao implements IStokDao {
         return result;
     }
 
+    @Override
+    public Stok getStokByStokKod(String stokKod) {
+        Stok stok = null;
+
+        try {
+            String sql = "SELECT *  FROM STOKLAR WHERE sto_kod = ?";
+
+
+            Cursor c;
+            c = sqLiteDatabase.rawQuery(sql, new String[]{stokKod});
+
+            int idxGuid = c.getColumnIndex(SQLiteHelper.STO_GUID);
+            int idxKod = c.getColumnIndex(SQLiteHelper.STO_KOD);
+            int idxIsim = c.getColumnIndex(SQLiteHelper.STO_ISIM);
+            int idxKisaIsmi = c.getColumnIndex(SQLiteHelper.STO_KISA_ISMI);
+            int idxBedenKodu = c.getColumnIndex(SQLiteHelper.STO_BEDEN_KODU);
+            int idxMensei = c.getColumnIndex(SQLiteHelper.STO_MENSEI);
+            int idxYerli = c.getColumnIndex(SQLiteHelper.STO_YERLI_YABANCI);
+            int idxBirimKatsayi = c.getColumnIndex(SQLiteHelper.STO_BIRIM3_KATSAYI);
+            int idxBirimAd = c.getColumnIndex(SQLiteHelper.STO_BIRIM3_AD);
+            int idxReyon= c.getColumnIndex(SQLiteHelper.STO_REYON_KODU);
+            int idxCreate= c.getColumnIndex(SQLiteHelper.STO_CREATE_DATE);
+            int idxLatup= c.getColumnIndex(SQLiteHelper.STO_LASTUP_DATE);
+
+            if (c == null || c.getCount() == 0) {
+                stok = null;
+            } else {
+                c.moveToFirst();
+                stok = new Stok(
+                        c.getString(idxGuid),
+                        c.getString(idxKod),
+                        c.getString(idxIsim),
+                        c.getString(idxKisaIsmi),
+                        c.getString(idxBedenKodu),
+                        c.getString(idxMensei),
+                        c.getInt(idxYerli),
+                        c.getFloat(idxBirimKatsayi),
+                        c.getString(idxBirimAd),
+                        c.getString(idxReyon),
+                        c.getString(idxCreate),
+                        c.getString(idxLatup));
+
+
+
+            }
+            c.close();
+        } catch (Exception exception) {
+            Log.e("[STOKLAR]", exception.getMessage());
+        }
+        return stok;
+
+
+    }
+
     private ContentValues getContentValues(Stok stok) {
         ContentValues values = new ContentValues();
         values.put("sto_guid", stok.getSto_guid());
