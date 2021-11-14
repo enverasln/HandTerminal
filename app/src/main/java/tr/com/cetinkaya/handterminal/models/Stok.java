@@ -22,7 +22,7 @@ public class Stok implements Serializable {
 
     public Stok(String sto_guid, String sto_kod, String sto_isim, String sto_kisa_ismi,
                 String sto_beden_kodu, String sto_mensei, int sto_yerli_yabanci,
-                float sto_birim3_katsayi, String sto_birim3_ad, String sto_reyon_kodu,
+                double sto_birim3_katsayi, String sto_birim3_ad, String sto_reyon_kodu,
                 String sto_create_date, String sto_update_date) {
         this.sto_guid = sto_guid;
         this.sto_kod = sto_kod;

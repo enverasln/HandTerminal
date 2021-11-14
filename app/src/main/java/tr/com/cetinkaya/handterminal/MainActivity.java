@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             sharedPreferences.edit().putInt("depoNo", kullanici.getDepo().getDep_no()).apply();
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
+
         }
 
     }
