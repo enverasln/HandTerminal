@@ -1,5 +1,7 @@
 package tr.com.cetinkaya.handterminal.helpers;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,12 +9,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class Helper {
+    private static final String TAG = "HELPER";
+
+
 
     private static void backupDatabase() {
 
     }
 
     public static void loadDatabase(String source, String destination) throws Exception {
+
         File inputFile = new File(source);
         if (inputFile.exists()) {
             try {
@@ -27,12 +33,14 @@ public class Helper {
                 outputStream.close();
                 fileInputStream.close();
             } catch (Exception exception) {
-                exception.printStackTrace();
+                Log.e(TAG, exception.getMessage());
             }
         } else {
             throw new Exception("Veritabanı yedekten döndürülemedi.\n" +
                     "Veritabanı dosyası/klasörü mevcut olmayabilir ya da ismi hatalı yazılmış olabilir.");
         }
+
+
     }
 
 

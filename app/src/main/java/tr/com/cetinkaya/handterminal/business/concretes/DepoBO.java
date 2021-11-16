@@ -18,4 +18,14 @@ public class DepoBO implements IDepoBO {
     public Depo getDepoById(int id) {
         return depoDao.getDepoById(id);
     }
+
+    @Override
+    public int updateDepo(Depo depo) {
+        return depoDao.updateDepo(depo);
+    }
+
+    @Override
+    public void insertDepo(Depo depo) {
+        depoDao.insertDepo(depo);
+    }
 }

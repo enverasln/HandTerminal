@@ -1,5 +1,6 @@
 package tr.com.cetinkaya.handterminal.daos.concretes;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,7 +11,7 @@ import tr.com.cetinkaya.handterminal.models.Barkod;
 import tr.com.cetinkaya.handterminal.models.Stok;
 
 public class BarkodSQLiteDao implements IBarkodDao {
-
+    private final String TAG = "BarkodSQLiteDao";
     private SQLiteDatabase sqLiteDatabase;
 
     public BarkodSQLiteDao(SQLiteDatabase sqLiteDatabase) {
@@ -81,5 +82,68 @@ public class BarkodSQLiteDao implements IBarkodDao {
             Log.e("[BARKOD_TANIMLARI]", exception.getMessage());
         }
         return barkod;
+    }
+
+    @Override
+    public String getLastupDate() {
+        String lastupDate = "";
+        try {
+            String sql = "SELECT MAX(bar_lastup_date) AS SAYI FROM BARKOD_TANIMLARI";
+
+            Cursor c;
+            c = sqLiteDatabase.rawQuery(sql, null);
+            if (c == null || c.getCount() == 0) {
+                lastupDate = "";
+            } else {
+                c.moveToFirst();
+                String tarih = c.getString(0);
+                lastupDate = tarih;
+
+            }
+            c.close();
+        } catch (Exception exception) {
+            Log.e("[STOKLAR]", exception.getMessage());
+        }
+        return lastupDate;
+    }
+
+    @Override
+    public int updateBarkod(Barkod barkod) {
+        int result = 0;
+        try {
+            ContentValues values = getContentValues(barkod);
+            result = sqLiteDatabase.update(SQLiteHelper.BARKOD_TANIMLARI, values, "bar_Guid = ?", new String[]{barkod.getBar_guid()});
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void insertBarkod(Barkod barkod) {
+
+        try {
+            ContentValues values = getContentValues(barkod);
+            sqLiteDatabase.insert(SQLiteHelper.BARKOD_TANIMLARI, null, values);
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+
+    }
+
+    private ContentValues getContentValues(Barkod barkod) {
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.BAR_GUID, barkod.getBar_guid());
+        values.put(SQLiteHelper.BAR_KODU, barkod.getBar_kodu());
+        values.put(SQLiteHelper.BAR_STOKKODU, barkod.getStok().getSto_kod());
+        values.put(SQLiteHelper.BAR_BIRIMPNTR, barkod.getBar_birimpntr());
+        values.put(SQLiteHelper.BAR_BEDENPNTR, barkod.getBar_bedenpntr());
+        values.put(SQLiteHelper.BAR_BEDENNUMARASI, barkod.getBar_bedennumarasi());
+        values.put(SQLiteHelper.BAR_CREATE_DATE, barkod.getBar_create_date());
+        values.put(SQLiteHelper.BAR_LASTUP_DATE, barkod.getBar_lastup_date());
+
+        return values;
     }
 }

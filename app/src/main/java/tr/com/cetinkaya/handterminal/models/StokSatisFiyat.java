@@ -1,6 +1,8 @@
 package tr.com.cetinkaya.handterminal.models;
 
-public class StokSatisFiyat {
+import java.io.Serializable;
+
+public class StokSatisFiyat implements Serializable {
     private String sfiyat_guid;
     private Stok stok;
     private int sfiyat_listesirano;

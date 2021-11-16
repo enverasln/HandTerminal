@@ -1,5 +1,6 @@
 package tr.com.cetinkaya.handterminal;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -40,18 +41,82 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissions, requestCode);
         }
 
+
         loadDatabase();
+        //kullaniciGetir();
 
     }
 
-    public void login(View view) {
-        /*
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);*/
 
+   /* private void kullaniciGetir() {
+
+        String url = String.format("%s/db/stoklar", Helper.API_URL);
+        try {
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("sto_lastup_date", "2011-02-11 10:40:49.237");
+            jsonBody.put("page_number", 1);
+
+            final String mRequestBody = jsonBody.toString();
+
+            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    //Log.e("Cevap", response);
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        JSONArray kullaniciList = jsonObject.getJSONArray("data");
+                        for (int i = 0; i < kullaniciList.length(); i++) {
+
+                        JSONObject kullanici = kullaniciList.getJSONObject(i);
+
+                        String kullaniciAdi = kullanici.getString("sto_kod");
+                        String sifre = kullanici.getString("sto_isim");
+                        int aktif = kullanici.getInt("sto_birim1_katsayi");
+                        Log.e("Cevap", kullaniciAdi + " " + sifre + " " + aktif);
+
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Cevap", error.toString());
+                }
+            }){
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+            Volley.newRequestQueue(this).add(istek);
+        }catch(JSONException exception) {
+            exception.printStackTrace();
+        }
+
+    }*/
+
+    /**
+     *
+     */
+    public void login(View view) {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
-
         KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
         Kullanici kullanici = kullaniciBO.getKullaniciWithKullaniciAdiAndSifre(binding.userNameText.getText().toString(),
                 binding.passwordText.getText().toString());
@@ -64,23 +129,25 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
-
     }
 
+    /**
+     * Check user table count. If the count is 0, load external database
+     * from ./DCIM/MobilEtiket directory to internal database
+     */
     private void loadDatabase() {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
-        SQLiteDatabase db = sqLiteHelper.getWritableDatabase();
+        SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
 
         KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
-        String sourceDB = String.format("%s/MobilEtiket/%s.db",
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), SQLiteHelper.DATABASE_NAME);
-        String destinationDB = getDatabasePath(SQLiteHelper.DATABASE_NAME).toString();
 
         int count = kullaniciBO.getCount();
         System.out.println(count);
         if (count == 0) {
             try {
+                String sourceDB = String.format("%s/MobilEtiket/%s.db",
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), SQLiteHelper.DATABASE_NAME);
+                String destinationDB = getDatabasePath(SQLiteHelper.DATABASE_NAME).toString();
                 Helper.loadDatabase(sourceDB, destinationDB);
             } catch (Exception exception) {
                 exception.printStackTrace();

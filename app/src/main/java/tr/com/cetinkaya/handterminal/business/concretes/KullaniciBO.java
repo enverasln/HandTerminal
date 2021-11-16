@@ -20,4 +20,14 @@ public class KullaniciBO implements IKullaniciBO {
     public Kullanici getKullaniciWithKullaniciAdiAndSifre(String kullaniciAdi, String sifre) {
         return  kullaniciDao.getKullaniciWithKullaniciAdiAndSifre(kullaniciAdi, sifre);
     }
+
+    @Override
+    public int updateKullanici(Kullanici kullanici) {
+        return kullaniciDao.updateKullanici(kullanici);
+    }
+
+    @Override
+    public void insertKullanici(Kullanici kullanici) {
+        kullaniciDao.insertKullanici(kullanici);
+    }
 }

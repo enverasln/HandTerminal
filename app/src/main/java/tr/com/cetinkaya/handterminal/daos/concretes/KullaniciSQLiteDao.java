@@ -1,5 +1,6 @@
 package tr.com.cetinkaya.handterminal.daos.concretes;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,6 +11,8 @@ import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.Kullanici;
 
 public class KullaniciSQLiteDao implements IKullaniciDao {
+    private String TAG = "Kullanici";
+
 
     private SQLiteDatabase sqLiteDatabase;
 
@@ -34,6 +37,8 @@ public class KullaniciSQLiteDao implements IKullaniciDao {
                 result = sayi;
 
             }
+            c.close();
+            sqLiteDatabase.close();
         } catch (Exception exception) {
             Log.e("[KULLANICILAR]", exception.getMessage());
         }
@@ -71,5 +76,31 @@ public class KullaniciSQLiteDao implements IKullaniciDao {
             Log.e("[KULLANICILAR]", exception.getMessage());
         }
         return kullanici;
+    }
+
+    @Override
+    public int updateKullanici(Kullanici kullanici) {
+        return 0;
+    }
+
+    @Override
+    public void insertKullanici(Kullanici kullanici) {
+        try {
+            ContentValues values = getContentValues(kullanici);
+            sqLiteDatabase.insert(SQLiteHelper.DEPOLAR, null, values);
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+    }
+
+    private ContentValues getContentValues(Kullanici kullanici) {
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.KULLANICI_ADI, kullanici.getKullanciadi());
+        values.put(SQLiteHelper.SIFRE, kullanici.getSifre());
+        values.put(SQLiteHelper.AKTIF, kullanici.getAktif());
+        values.put(SQLiteHelper.DEPO_NO, kullanici.getDepo().getDep_no());
+
+        return values;
     }
 }

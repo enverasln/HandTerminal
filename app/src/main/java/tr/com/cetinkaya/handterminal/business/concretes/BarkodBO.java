@@ -17,4 +17,19 @@ public class BarkodBO implements IBarkodBO {
     public Barkod getBarkodWithBarkod(String barkodu) {
         return barkodDao.getBarkodWithBarkod(barkodu);
     }
+
+    @Override
+    public String getLastupDate() {
+        return barkodDao.getLastupDate();
+    }
+
+    @Override
+    public int updateBarkod(Barkod barkod) {
+        return barkodDao.updateBarkod(barkod);
+    }
+
+    @Override
+    public void insertBarkod(Barkod barkod) {
+        barkodDao.insertBarkod(barkod);
+    }
 }

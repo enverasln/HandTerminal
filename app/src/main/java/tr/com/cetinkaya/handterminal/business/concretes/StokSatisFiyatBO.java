@@ -29,4 +29,19 @@ public class StokSatisFiyatBO implements IStokSatisFiyatBO {
     public StokSatisFiyat getTakstiliFiyat(Barkod barkod, Depo depo) {
         return satisFiyatDao.getTakstiliFiyat(barkod, depo);
     }
+
+    @Override
+    public String getLastupDate() {
+        return satisFiyatDao.getLastupDate();
+    }
+
+    @Override
+    public int updateSatifFiyat(StokSatisFiyat newSFiyat) {
+        return satisFiyatDao.updateSatifFiyat(newSFiyat);
+    }
+
+    @Override
+    public void insertSatisFiyat(StokSatisFiyat newSFiyat) {
+        satisFiyatDao.insertSatisFiyat(newSFiyat);
+    }
 }
