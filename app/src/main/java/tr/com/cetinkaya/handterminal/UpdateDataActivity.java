@@ -3,6 +3,8 @@ package tr.com.cetinkaya.handterminal;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -49,6 +51,7 @@ import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
 
 
 public class UpdateDataActivity extends AppCompatActivity {
+    private final String TAG = "UpdateDataActivity";
     private SharedPreferences sharedPreferences;
     private int etiketDepoNo;
     private int depoNo;
@@ -60,9 +63,7 @@ public class UpdateDataActivity extends AppCompatActivity {
     private DepoBO depoBO;
     private KullaniciBO kullaniciBO;
     private StokSatisFiyatBO stokSatisFiyatBO;
-    private final String TAG = "UpdateDataActivity";
     private ActivityUpdateDataBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,26 +80,17 @@ public class UpdateDataActivity extends AppCompatActivity {
 
 
         sqLiteHelper = new SQLiteHelper(this);
-        db = sqLiteHelper.getWritableDatabase();
-
-        stokBO = new StokBO(new StokSQLiteDao(db));
-        barkodBO = new BarkodBO(new BarkodSQLiteDao(db));
-        depoBO = new DepoBO(new DepoSQLiteDao(db));
-        kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
-        stokSatisFiyatBO = new StokSatisFiyatBO(new StokSatisFiyatSQLiteDao(db));
 
         makeInvisibleInformationLabels();
     }
 
     private void makeInvisibleInformationLabels() {
-        binding.aktarimDurumuLabel.setVisibility(View.GONE);
+
         binding.stokAktarimAdetText.setVisibility(View.GONE);
         binding.barkodAktarimAdetText.setVisibility(View.GONE);
         binding.fiyatAktarimAdetText.setVisibility(View.GONE);
         binding.depoAktarimAdetText.setVisibility(View.GONE);
 
-        binding.aktarimDurumuLabel.setText("Aktarım Yapılıyor");
-        binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.red_500));
         binding.stokAktarimAdetText.setText("");
         binding.barkodAktarimAdetText.setText("");
         binding.fiyatAktarimAdetText.setText("");
@@ -106,6 +98,15 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     private void makeVisibleInformationLabels() {
+
+        if (binding.stokCheckBox.isChecked() ||
+                binding.barkodCheckBox.isChecked() ||
+                binding.fiyatCheckBox.isChecked() ||
+                binding.fiyatCheckBox.isChecked() ||
+                binding.depoCheckBox.isChecked()) {
+            binding.aktarimDurumuLabel.setText("Aktarım Yapılıyor");
+            binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.red_500));
+        }
 
         if (binding.stokCheckBox.isChecked()) {
             binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
@@ -122,7 +123,7 @@ public class UpdateDataActivity extends AppCompatActivity {
             binding.fiyatAktarimAdetText.setVisibility(View.VISIBLE);
         }
 
-        if(binding.depoCheckBox.isChecked()) {
+        if (binding.depoCheckBox.isChecked()) {
             binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
             binding.depoAktarimAdetText.setVisibility(View.VISIBLE);
         }
@@ -134,31 +135,43 @@ public class UpdateDataActivity extends AppCompatActivity {
 
     public void updateData(View view) {
 
+        initDatabase();
+
         makeInvisibleInformationLabels();
 
         makeVisibleInformationLabels();
 
+
         if (binding.stokCheckBox.isChecked()) {
 
             String stoLastupDate = stokBO.getLastupDate();
-            new GettingAllStok(stoLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/stoklar");
+            new GettingAllStok(stoLastupDate, 0, 0).execute("http://192.168.0.47:3000/db/stoklar");
 
         } else if (binding.barkodCheckBox.isChecked()) {
 
             String barLastupDate = barkodBO.getLastupDate();
-            new GettingAllBarkod(barLastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+            new GettingAllBarkod(barLastupDate, 0, 0).execute("http://192.168.0.47:3000/db/barkodlar");
 
         } else if (binding.fiyatCheckBox.isChecked()) {
 
             String sfiyatLastupDate = stokSatisFiyatBO.getLastupDate();
-            new GettingAllEtiketDepoFiyat(sfiyatLastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+            new GettingAllFiyat(sfiyatLastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
 
         } else if (binding.depoCheckBox.isChecked()) {
-            new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+            new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
         }
 
     }
 
+    private void initDatabase() {
+        db = sqLiteHelper.getWritableDatabase();
+
+        stokBO = new StokBO(new StokSQLiteDao(db));
+        barkodBO = new BarkodBO(new BarkodSQLiteDao(db));
+        depoBO = new DepoBO(new DepoSQLiteDao(db));
+        kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
+        stokSatisFiyatBO = new StokSatisFiyatBO(new StokSatisFiyatSQLiteDao(db));
+    }
 
     public class GettingAllStok extends AsyncTask<String, Integer, Boolean> {
         private final String TAG = "ServerConnection";
@@ -167,6 +180,8 @@ public class UpdateDataActivity extends AppCompatActivity {
         private int count;
         private String lastupDate;
         private String jsonStr;
+
+        private boolean flStokSuccess;
 
         public GettingAllStok(String lastupDate, int page, int count) {
             this.lastupDate = lastupDate;
@@ -184,7 +199,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-
+            flStokSuccess = true;
             try {
                 StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
                 requestEntity.setContentType("application/json");
@@ -238,7 +253,6 @@ public class UpdateDataActivity extends AppCompatActivity {
                 } else if (status == 404) {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
-
                     JSONObject jsonObject = new JSONObject(data);
                     Log.d(TAG, jsonObject.toString());
                     return true;
@@ -246,10 +260,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                return false;
+                flStokSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
-                return false;
+                flStokSuccess = false;
             }
 
             return false;
@@ -264,8 +278,24 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllStok(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
+                new GettingAllStok(lastupDate, ++page, count).execute("http://192.168.0.47:3000/db/stoklar");
             } else {
+                if(!flStokSuccess) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
+                    alert.setTitle("Dikkat")
+                            .setMessage("Stok bilgileri güncellenirken hata oluştu.\n" +
+                                    "Wi-fi kapalı olabilir. Lütfen kontrol ediniz.\n" +
+                                    "Wi-fi bağlantısı var ise BT ekibiyle görüşünüz.")
+                            .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
                 if (count != 0) {
                     binding.stokAktarimAdetText.setText(count + " adet stok kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
@@ -274,12 +304,15 @@ public class UpdateDataActivity extends AppCompatActivity {
 
                 if (binding.barkodCheckBox.isChecked()) {
                     String lastupDate = barkodBO.getLastupDate();
-                    new GettingAllBarkod(lastupDate, 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+                    new GettingAllBarkod(lastupDate, 0, 0).execute("http://192.168.0.47:3000/db/barkodlar");
                 } else if (binding.fiyatCheckBox.isChecked()) {
                     String lastupDate = stokSatisFiyatBO.getLastupDate();
-                    new GettingAllEtiketDepoFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
-                } else if(binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                    new GettingAllFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
+                } else if (binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                } else {
+                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
+                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
                 }
             }
 
@@ -287,12 +320,14 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     public class GettingAllBarkod extends AsyncTask<String, Integer, Boolean> {
-        private final String TAG = "ServerConnection";
+        private final String TAG = "BarkodConnection";
 
         private int page;
         private int count;
         private String lastupDate;
         private String jsonStr;
+
+        private boolean flBarkodSuccess;
 
         public GettingAllBarkod(String lastupDate, int page, int count) {
             this.lastupDate = lastupDate;
@@ -311,7 +346,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-
+            flBarkodSuccess = true;
             try {
                 StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
                 requestEntity.setContentType("application/json");
@@ -377,10 +412,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                return false;
+                flBarkodSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
-                return false;
+                flBarkodSuccess = false;
             }
 
             return false;
@@ -395,8 +430,24 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.168.0.47:3000/db/barkodlar");
             } else {
+                if(!flBarkodSuccess) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
+                    alert.setTitle("Dikkat")
+                            .setMessage("Barkod bilgileri güncellenirken hata oluştu.\n" +
+                                    "Wi-fi kapalı olabilir. Lütfen kontrol ediniz.\n" +
+                                    "Wi-fi bağlantısı var ise BT ekibiyle görüşünüz.")
+                            .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
                 if (count != 0) {
                     binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
@@ -405,16 +456,19 @@ public class UpdateDataActivity extends AppCompatActivity {
 
                 if (binding.fiyatCheckBox.isChecked()) {
                     String lastupDate = stokSatisFiyatBO.getLastupDate();
-                    new GettingAllEtiketDepoFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
-                } else if(binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                    new GettingAllFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
+                } else if (binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                } else {
+                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
+                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
                 }
             }
 
         }
     }
 
-    public class GettingAllEtiketDepoFiyat extends AsyncTask<String, Integer, Boolean> {
+    public class GettingAllFiyat extends AsyncTask<String, Integer, Boolean> {
         private final String TAG = "ServerConnection";
 
         private int page;
@@ -424,7 +478,9 @@ public class UpdateDataActivity extends AppCompatActivity {
         private String lastUpdate;
         private String jsonStr;
 
-        public GettingAllEtiketDepoFiyat(String lastUpdate, int page, int etiketDepo, int depo, int count) {
+        private boolean flFiyatSuccess;
+
+        public GettingAllFiyat(String lastUpdate, int page, int etiketDepo, int depo, int count) {
             this.lastUpdate = lastUpdate;
             this.count = count;
             this.page = page;
@@ -445,7 +501,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-
+            flFiyatSuccess = true;
             try {
                 StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
                 requestEntity.setContentType("application/json");
@@ -505,10 +561,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                return false;
+                flFiyatSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
-                return false;
+                flFiyatSuccess = false;
             }
 
             return false;
@@ -523,15 +579,34 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllEtiketDepoFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.127.2.194:3000/db/fiyatlar");
+                new GettingAllFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.168.0.47:3000/db/fiyatlar");
             } else {
+                if(!flFiyatSuccess) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
+                    alert.setTitle("Dikkat")
+                            .setMessage("Fiyat bilgileri güncellenirken hata oluştu.\n" +
+                                    "Wi-fi kapalı olabilir. Lütfen kontrol ediniz.\n" +
+                                    "Wi-fi bağlantısı var ise BT ekibiyle görüşünüz.")
+                            .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    return;
+                }
+
                 if (count != 0) {
                     binding.fiyatAktarimAdetText.setText(count + " adet fiyat kaydı güncellendi. \nAktarım tamamlandı.");
                 } else {
                     binding.fiyatAktarimAdetText.setText("Fiyat tablosu hali hazırda güncel durumdadır.");
                 }
-                if(binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                if (binding.depoCheckBox.isChecked()) {
+                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                } else {
+                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
+                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
                 }
 
             }
@@ -544,6 +619,8 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         private int count;
 
+        private boolean flDepoSuccess;
+
         public GettingAllDepo(int count) {
             this.count = count;
         }
@@ -555,7 +632,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-
+            flDepoSuccess = true;
             try {
 
                 HttpGet httpGet = new HttpGet(urls[0]);
@@ -603,10 +680,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                return false;
+                flDepoSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
-                return false;
+                flDepoSuccess = false;
             }
 
             return false;
@@ -622,7 +699,23 @@ public class UpdateDataActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (count != 0) {
                 binding.depoAktarimAdetText.setText(count + " adet depo kaydı güncellendi. \nAktarım tamamlandı.\n");
-                new GettingAllKullanici(0).execute("http://192.127.2.194:3000/db/kullanicilar");
+                new GettingAllKullanici(0).execute("http://192.168.0.47:3000/db/kullanicilar");
+            } else {
+                if(!flDepoSuccess) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
+                    alert.setTitle("Dikkat")
+                            .setMessage("Depo bilgileri güncellenirken hata oluştu.\n" +
+                                    "Wi-fi kapalı olabilir. Lütfen kontrol ediniz.\n" +
+                                    "Wi-fi bağlantısı var ise BT ekibiyle görüşünüz.")
+                            .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    return;
+                }
             }
         }
     }
@@ -631,6 +724,8 @@ public class UpdateDataActivity extends AppCompatActivity {
         private final String TAG = "DepoConnection";
 
         private int count;
+
+        private boolean flKullaniciSuccess;
 
         public GettingAllKullanici(int count) {
             this.count = count;
@@ -643,7 +738,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-
+            flKullaniciSuccess = true;
             try {
 
                 HttpGet httpGet = new HttpGet(urls[0]);
@@ -670,7 +765,7 @@ public class UpdateDataActivity extends AppCompatActivity {
                         newKullanici.setSifre(kullanici.getString(SQLiteHelper.SIFRE));
                         newKullanici.setAktif(kullanici.getInt(SQLiteHelper.AKTIF));
 
-                        Depo  depo = depoBO.getDepoById(kullanici.getInt(SQLiteHelper.DEPO_NO));
+                        Depo depo = depoBO.getDepoById(kullanici.getInt(SQLiteHelper.DEPO_NO));
                         newKullanici.setDepo(depo);
 
                         if (kullaniciBO.updateKullanici(newKullanici) == 0) {
@@ -695,10 +790,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                return false;
+                flKullaniciSuccess =  false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
-                return false;
+                flKullaniciSuccess = false;
             }
 
             return false;
@@ -715,7 +810,21 @@ public class UpdateDataActivity extends AppCompatActivity {
             if (count != 0) {
                 binding.depoAktarimAdetText.setText(count + " adet kullanıcı kaydı güncellendi. \nAktarım tamamlandı.");
                 binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
+                binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
                 db.close();
+            } else {
+                AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
+                alert.setTitle("Dikkat")
+                        .setMessage("Kullanıcı bilgileri güncellenirken hata oluştu.\n" +
+                                "Wi-fi kapalı olabilir. Lütfen kontrol ediniz.\n" +
+                                "Wi-fi bağlantısı var ise BT ekibiyle görüşünüz.")
+                        .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .show();
             }
         }
 

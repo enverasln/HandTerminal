@@ -183,7 +183,6 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
         }
     }
 
-
     private ContentValues getContentValues(StokSatisFiyat stokSatisFiyat) {
         ContentValues values = new ContentValues();
         values.put(SQLiteHelper.SFIYAT_GUID, stokSatisFiyat.getSfiyat_guid());
