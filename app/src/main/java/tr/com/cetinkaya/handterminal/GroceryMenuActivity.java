@@ -8,6 +8,7 @@ import android.view.View;
 
 import tr.com.cetinkaya.handterminal.databinding.ActivityGroceryMenuBinding;
 import tr.com.cetinkaya.handterminal.helpers.BarkodTipi;
+import tr.com.cetinkaya.handterminal.helpers.BluetoothHelper;
 
 public class GroceryMenuActivity extends AppCompatActivity {
     private ActivityGroceryMenuBinding binding;
@@ -16,6 +17,7 @@ public class GroceryMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_menu);
+
     }
 
     public void openLabelPage(View view) {
@@ -33,6 +35,8 @@ public class GroceryMenuActivity extends AppCompatActivity {
         }
         intent.putExtra("barkodTipi", barkodTipi);
         startActivity(intent);
+
+
     }
 
     public void closeActivity(View view) {

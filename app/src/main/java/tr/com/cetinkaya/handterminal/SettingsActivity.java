@@ -2,17 +2,14 @@ package tr.com.cetinkaya.handterminal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import tr.com.cetinkaya.handterminal.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
     private ActivitySettingsBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +23,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void openPrinterSettingsActivity(View view) {
-        /*Intent intent = new Intent(this, PrinterSettingsActivity.class);
-        startActivity(intent);*/
+        //Intent intent = new Intent(this, PrinterSettingsActivity.class);
+        //startActivity(intent);
     }
 
     public void openDatabaseSettingsActivity(View view) {

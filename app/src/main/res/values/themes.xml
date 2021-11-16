@@ -15,4 +15,13 @@
 
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.HandTerminal.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.HandTerminal.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.HandTerminal.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
