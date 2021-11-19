@@ -6,7 +6,6 @@ import tr.com.cetinkaya.handterminal.business.abstracts.IDepoBO;
 import tr.com.cetinkaya.handterminal.business.abstracts.IStokSatisFiyatBO;
 import tr.com.cetinkaya.handterminal.controllers.abstracts.ILabelController;
 import tr.com.cetinkaya.handterminal.dtos.LabelDto;
-import tr.com.cetinkaya.handterminal.helpers.BarkodTipi;
 import tr.com.cetinkaya.handterminal.models.Barkod;
 import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
@@ -29,7 +28,7 @@ public class LabelController implements ILabelController {
 
         Barkod brkd = barkodBO.getBarkodWithBarkod(barkod);
         Depo etiketDepo = depoBO.getDepoById(etiketDepoNo);
-        Depo depo = depoBO.getDepoById(depoNo);
+        Depo satisDepo = depoBO.getDepoById(depoNo);
 
         if(brkd != null) {
             String stokKod = brkd.getStok().getSto_kod();
@@ -37,18 +36,18 @@ public class LabelController implements ILabelController {
             String reyon = brkd.getStok().getSto_reyon_kodu();
             String beden = brkd.getBar_bedennumarasi();
             StokSatisFiyat etiketFiyat = satisFiyatBO.getEtiketFiyat(brkd, etiketDepo);
-            StokSatisFiyat indirimliFiyat = satisFiyatBO.getIndirimliFiyat(brkd, depo);
-            StokSatisFiyat taksitliFiyat = satisFiyatBO.getTakstiliFiyat(brkd, depo);
+            StokSatisFiyat satisFiyati = satisFiyatBO.getIndirimliFiyat(brkd, satisDepo);
+            StokSatisFiyat taksitliFiyat = satisFiyatBO.getTakstiliFiyat(brkd, satisDepo);
 
-
-
-
-            return new LabelDto.Builder(stokKod, stokAdi, etiketFiyat.getSfiyat_fiyati(), reyon)
+            return new LabelDto.Builder(barkod, stokKod, stokAdi, satisFiyati.getSfiyat_fiyati(), reyon)
                     .beden(beden)
-                    .indirimFiyati(indirimliFiyat.getSfiyat_fiyati())
+                    .etiketFiyati(etiketFiyat.getSfiyat_fiyati())
                     .taksitFiyati(taksitliFiyat.getSfiyat_fiyati())
                     .birimAdi(brkd.getStok().getSto_birim3_ad())
                     .birimKatSayi(brkd.getStok().getSto_birim3_katsayi())
+                    .yerliUretim(brkd.getStok().getSto_yerli_yabanci())
+                    .fiyatDegTarihi(satisFiyati.getSfiyat_lastup_date())
+                    .mensei(brkd.getStok().getSto_mensei())
                     .build();
         }
 

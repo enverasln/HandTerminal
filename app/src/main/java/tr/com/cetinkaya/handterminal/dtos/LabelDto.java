@@ -1,30 +1,38 @@
 package tr.com.cetinkaya.handterminal.dtos;
 
-import tr.com.cetinkaya.handterminal.helpers.BarkodTipi;
-
 public class LabelDto {
+    private final String barkod;
     private final String stokKodu;
     private final String stokAdi;
     private final String beden;
+    private final double etiketFiyati;
     private final double satisFiyati;
-    private final double indirimFiyati;
     private final double taksitFiyati;
-    private final double birimFiyati;
+    private final double birimKatsayi;
     private final String birimAdi;
     private final String reyon;
+    private String fiyatDegTarihi = "";
+    private int yerliUretim = 0;
+    private String mensei;
+
 
     public static class Builder {
+        private final String barkod;
         private final String stokKodu;
         private final String stokAdi;
         private String beden = "";
-        private double satisFiyati = 0.0;
-        private double indirimFiyati = 0.0;
+        private double etiketFiyati = 0.0;
+        private double satisFiyati;
         private double taksitFiyati = 0.0;
-        private double birimFiyati = 0.0;
+        private double birimKatsayi = 0.0;
         private String birimAdi = "";
         private final String reyon;
+        private String fiyatDegTarihi = "";
+        private int yerliUretim = 0;
+        private String mensei;
 
-        public Builder(String stokKodu, String stokAdi, float satisFiyati, String reyon) {
+        public Builder(String barkod, String stokKodu, String stokAdi, float satisFiyati, String reyon) {
+            this.barkod = barkod;
             this.stokKodu = stokKodu;
             this.stokAdi = stokAdi;
             this.satisFiyati = satisFiyati;
@@ -36,8 +44,8 @@ public class LabelDto {
             return this;
         }
 
-        public Builder indirimFiyati(double val) {
-            indirimFiyati = val;
+        public Builder etiketFiyati(double val) {
+            etiketFiyati = val;
             return this;
         }
 
@@ -47,22 +55,27 @@ public class LabelDto {
         }
 
         public Builder birimKatSayi(double val) {
-
-            if (indirimFiyati != 0) {
-                birimFiyati = indirimFiyati;
-            } else {
-                birimFiyati = satisFiyati;
-            }
-            if (val < 0) {
-                birimFiyati = birimFiyati * Math.abs(val);
-            } else {
-                birimFiyati = birimFiyati / val;
-            }
+            birimKatsayi = val;
             return this;
         }
 
         public Builder birimAdi(String val) {
             birimAdi = val;
+            return this;
+        }
+
+        public Builder fiyatDegTarihi(String val) {
+            this.fiyatDegTarihi = val;
+            return this;
+        }
+
+        public Builder yerliUretim(int val) {
+            this.yerliUretim = val;
+            return this;
+        }
+
+        public Builder mensei(String val) {
+            this.mensei = val;
             return this;
         }
 
@@ -72,15 +85,23 @@ public class LabelDto {
     }
 
     private LabelDto(Builder builder) {
+        barkod = builder.barkod;
         stokKodu = builder.stokKodu;
         stokAdi = builder.stokAdi;
         beden = builder.beden;
+        etiketFiyati = builder.etiketFiyati;
         satisFiyati = builder.satisFiyati;
-        indirimFiyati = builder.indirimFiyati;
         taksitFiyati = builder.taksitFiyati;
-        birimFiyati = builder.birimFiyati;
+        birimKatsayi = builder.birimKatsayi;
         birimAdi = builder.birimAdi;
         reyon = builder.reyon;
+        fiyatDegTarihi = builder.fiyatDegTarihi;
+        yerliUretim = builder.yerliUretim;
+        mensei = builder.mensei;
+    }
+
+    public String getBarkod() {
+        return barkod;
     }
 
     public String getStokKodu() {
@@ -95,12 +116,12 @@ public class LabelDto {
         return beden;
     }
 
-    public double getSatisFiyati() {
-        return satisFiyati;
+    public double getEtiketFiyati() {
+        return etiketFiyati;
     }
 
-    public double getIndirimFiyati() {
-        return indirimFiyati;
+    public double getSatisFiyati() {
+        return satisFiyati;
     }
 
     public double getTaksitFiyati() {
@@ -108,11 +129,23 @@ public class LabelDto {
     }
 
     public double getBirimFiyati() {
+        return calculateBirimFiyat(satisFiyati);
+    }
+
+    private double calculateBirimFiyat(double fiyat) {
+        double birimFiyati;
+        if (birimKatsayi < 0) {
+            birimFiyati = fiyat * Math.abs(birimKatsayi);
+        } else {
+            birimFiyati = fiyat / birimKatsayi;
+        }
         return birimFiyati;
     }
 
+
+
     public String getBirimAdi() {
-        return birimAdi;
+        return birimAdi.isEmpty() ? "-" : birimAdi;
     }
 
     public String getReyon() {
@@ -126,5 +159,23 @@ public class LabelDto {
 
     public boolean isReyonClothes() {
         return reyon.compareTo("051") > 0;
+    }
+
+    public double getIndirimOrani() {
+        double indirimTutari = etiketFiyati - satisFiyati;
+        double indirimOrani = (indirimTutari * 100) / satisFiyati;
+        return indirimOrani;
+    }
+
+    public String getFiyatDegTarihi() {
+        return fiyatDegTarihi;
+    }
+
+    public int getYerliUretim() {
+        return yerliUretim;
+    }
+
+    public String getMensei() {
+        return mensei.isEmpty() ? "-" : mensei;
     }
 }

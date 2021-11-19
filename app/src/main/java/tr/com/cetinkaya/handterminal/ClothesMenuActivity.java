@@ -40,6 +40,9 @@ public class ClothesMenuActivity extends AppCompatActivity  {
             case R.id.buttonWhiteWithoutBarcode:
                 barkodTipi = BarkodTipi.BARKODSUZ_BEYAZ;
                 break;
+            case R.id.buttonInstalmentPriceTag:
+                barkodTipi = BarkodTipi.TAKSITLI_FIYAT;
+                break;
             default:
                 barkodTipi = BarkodTipi.BARKODLU_BEYAZ;
                 break;

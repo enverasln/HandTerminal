@@ -28,6 +28,9 @@
             android:name=".SettingsActivity"
             android:exported="true" />
         <activity
+            android:name=".PrinterSettingActivity"
+            android:exported="true" />
+        <activity
             android:name=".LabelActivity"
             android:exported="true" />
         <activity

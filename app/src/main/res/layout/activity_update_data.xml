@@ -58,50 +58,6 @@
         app:layout_row="0" />
 
     <TextView
-        android:id="@+id/tabloTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/gray_200"
-        android:elevation="5dp"
-        android:focusable="false"
-        android:text="Güncellenecek Tablolar"
-        android:textAlignment="center"
-        android:textColor="@color/blue_500"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_column="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/magaza_adi_title_text"
-        app:layout_row="0" />
-
-    <TextView
-        android:id="@+id/aktarimDurumuLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/gray_200"
-        android:elevation="5dp"
-        android:focusable="false"
-        android:text="Aktarım Durumu"
-        android:textAlignment="center"
-        android:textColor="@color/blue_500"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_column="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/depoCheckBox"
-        app:layout_row="0" />
-
-    <TextView
         android:id="@+id/stokAktarimAdetText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -114,7 +70,7 @@
         app:layout_column="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aktarimDurumuLabel"
+        app:layout_constraintTop_toBottomOf="@+id/depoCheckBox"
         app:layout_row="0" />
 
 
@@ -219,20 +175,32 @@
         android:textColorLink="@color/blue_200"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabloTitleLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/magazaAdiLabel" />
+
+    <Button
+        android:id="@+id/stokTarihButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/custom_button"
+        android:text="19/11/2021"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/stokCheckBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/stokCheckBox" />
 
     <CheckBox
         android:id="@+id/barkodCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:minHeight="48dp"
         android:text="Barkod Bilgileri"
         android:textColor="@color/blue_200"
         android:textColorLink="@color/blue_200"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/stokCheckBox"
-        app:layout_constraintTop_toTopOf="@+id/stokCheckBox" />
+        app:layout_constraintStart_toStartOf="@+id/stokCheckBox"
+        app:layout_constraintTop_toBottomOf="@+id/stokCheckBox" />
 
     <CheckBox
         android:id="@+id/fiyatCheckBox"
@@ -252,13 +220,13 @@
         android:id="@+id/depoCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:minHeight="48dp"
         android:text="Depo ve Kullanıcı Bilgileri"
         android:textColor="@color/blue_200"
         android:textColorLink="@color/blue_200"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/fiyatCheckBox"
-        app:layout_constraintTop_toTopOf="@+id/fiyatCheckBox" />
+        app:layout_constraintStart_toStartOf="@+id/fiyatCheckBox"
+        app:layout_constraintTop_toBottomOf="@+id/fiyatCheckBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
