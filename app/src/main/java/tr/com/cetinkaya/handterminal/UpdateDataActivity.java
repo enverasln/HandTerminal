@@ -3,14 +3,20 @@ package tr.com.cetinkaya.handterminal;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 
 
 import org.apache.http.HttpEntity;
@@ -82,6 +88,8 @@ public class UpdateDataActivity extends AppCompatActivity {
         sqLiteHelper = new SQLiteHelper(this);
 
         makeInvisibleInformationLabels();
+        initDatabase();
+        loadLastupdate();
     }
 
     private void makeInvisibleInformationLabels() {
@@ -97,34 +105,98 @@ public class UpdateDataActivity extends AppCompatActivity {
         binding.depoAktarimAdetText.setText("");
     }
 
-    private void makeVisibleInformationLabels() {
+    private void loadLastupdate() {
+        binding.stokTarihButton.setText(getFormattedDate(getShortDate(stokBO.getLastupDate())));
+        binding.barkodTarihButton.setText(getFormattedDate(getShortDate(barkodBO.getLastupDate())));
+        binding.fiyatTarihButton.setText(getFormattedDate(getShortDate(stokSatisFiyatBO.getLastupDate())));
 
-        if (binding.stokCheckBox.isChecked() ||
-                binding.barkodCheckBox.isChecked() ||
-                binding.fiyatCheckBox.isChecked() ||
-                binding.fiyatCheckBox.isChecked() ||
-                binding.depoCheckBox.isChecked()) {
-            binding.aktarimDurumuLabel.setText("Aktarım Yapılıyor");
-            binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.red_500));
+    }
+
+    public void setTarih(View view) {
+        DatePickerDialog datePicker;//Datepicker objemiz
+        final Button button = (Button) view;
+        String date = button.getText().toString(); // binding.stokTarihButton.getText().toString();
+
+        int day = Integer.parseInt(date.substring(0, 2));
+        int month = Integer.parseInt(date.substring(3, 5)) - 1;
+        int year = Integer.parseInt(date.substring(6, 10));
+        datePicker = new DatePickerDialog(UpdateDataActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+
+                int month = monthOfYear + 1;
+
+                String dayStr = dayOfMonth < 10 ? "0" + dayOfMonth : Integer.toString(dayOfMonth);
+                String monthStr = month < 10 ? "0" + month : Integer.toString(month);
+
+                if (button.getId() == R.id.stokTarihButton) {
+                    binding.stokTarihButton.setText(dayStr + "/" + monthStr + "/" + year);//Ayarla butonu tıklandığında textview'a yazdırıyoruz
+                    binding.barkodTarihButton.setText(dayStr + "/" + monthStr + "/" + year);
+                    binding.fiyatTarihButton.setText(dayStr + "/" + monthStr + "/" + year);
+                } else if (button.getId() == R.id.barkodTarihButton) {
+                    binding.barkodTarihButton.setText(dayStr + "/" + monthStr + "/" + year);
+                } else if (button.getId() == R.id.fiyatTarihButton) {
+                    binding.fiyatTarihButton.setText(dayStr + "/" + monthStr + "/" + year);
+                }
+
+            }
+        }, year, month, day);//başlarken set edilcek değerlerimizi atıyoruz
+        datePicker.setTitle("Tarih Seçiniz");
+        datePicker.setButton(DatePickerDialog.BUTTON_POSITIVE, "Ayarla", datePicker);
+        datePicker.setButton(DatePickerDialog.BUTTON_NEGATIVE, "İptal", datePicker);
+
+        datePicker.show();
+    }
+
+
+    private String getShortDate(String date) {
+        return date.substring(0, 10);
+    }
+
+    private String getFormattedDate(String date) {
+        String[] datePart = date.split("-");
+        String formattedString = "";
+        formattedString = datePart[2].length() == 1 ? "0" + datePart[2] : datePart[2];
+        formattedString += "/" + (datePart[1].length() == 1 ? "0" + datePart[1] : datePart[1]);
+        formattedString += "/" + datePart[0];
+
+        return formattedString;
+    }
+
+
+    private String getRawDate(String date) {
+        String[] datePart = date.split("/");
+        String formattedString = "";
+
+        if(datePart.length > 2) {
+            formattedString += datePart[2];
+
+            formattedString += "-" + (datePart[1].length() == 1 ? "0" + datePart[1] : datePart[1]);
+            formattedString += "-" + (datePart[0].length() == 1 ? "0" + datePart[0] : datePart[0]);
+            return formattedString;
         }
+        return date;
+    }
 
+    private void makeVisibleInformationLabels() {
         if (binding.stokCheckBox.isChecked()) {
-            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
             binding.stokAktarimAdetText.setVisibility(View.VISIBLE);
         }
 
         if (binding.barkodCheckBox.isChecked()) {
-            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
             binding.barkodAktarimAdetText.setVisibility(View.VISIBLE);
         }
 
         if (binding.fiyatCheckBox.isChecked()) {
-            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
             binding.fiyatAktarimAdetText.setVisibility(View.VISIBLE);
         }
 
         if (binding.depoCheckBox.isChecked()) {
-            binding.aktarimDurumuLabel.setVisibility(View.VISIBLE);
+
             binding.depoAktarimAdetText.setVisibility(View.VISIBLE);
         }
     }
@@ -133,32 +205,52 @@ public class UpdateDataActivity extends AppCompatActivity {
         finish();
     }
 
+    public void passiveAllComponent() {
+        binding.stokCheckBox.setEnabled(false);
+        binding.barkodCheckBox.setEnabled(false);
+        binding.fiyatCheckBox.setEnabled(false);
+        binding.depoCheckBox.setEnabled(false);
+
+        binding.stokTarihButton.setEnabled(false);
+        binding.barkodTarihButton.setEnabled(false);
+        binding.fiyatTarihButton.setEnabled(false);
+
+        binding.veriGuncelleButton.setEnabled(false);
+
+
+
+    }
+
+    public void activeAllComponent() {
+        binding.stokCheckBox.setEnabled(true);
+        binding.barkodCheckBox.setEnabled(true);
+        binding.fiyatCheckBox.setEnabled(true);
+        binding.depoCheckBox.setEnabled(true);
+
+        binding.stokTarihButton.setEnabled(true);
+        binding.barkodTarihButton.setEnabled(true);
+        binding.fiyatTarihButton.setEnabled(true);
+
+        binding.veriGuncelleButton.setEnabled(true);
+    }
+
     public void updateData(View view) {
-
-        initDatabase();
-
+        passiveAllComponent();
         makeInvisibleInformationLabels();
 
         makeVisibleInformationLabels();
 
 
         if (binding.stokCheckBox.isChecked()) {
-
-            String stoLastupDate = stokBO.getLastupDate();
-            new GettingAllStok(stoLastupDate, 0, 0).execute("http://192.168.0.47:3000/db/stoklar");
-
+            new GettingAllStok(binding.stokTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/stoklar");
         } else if (binding.barkodCheckBox.isChecked()) {
-
-            String barLastupDate = barkodBO.getLastupDate();
-            new GettingAllBarkod(barLastupDate, 0, 0).execute("http://192.168.0.47:3000/db/barkodlar");
+            new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
 
         } else if (binding.fiyatCheckBox.isChecked()) {
-
-            String sfiyatLastupDate = stokSatisFiyatBO.getLastupDate();
-            new GettingAllFiyat(sfiyatLastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
+            new GettingAllFiyat(binding.barkodTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
 
         } else if (binding.depoCheckBox.isChecked()) {
-            new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+            new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
         }
 
     }
@@ -184,11 +276,11 @@ public class UpdateDataActivity extends AppCompatActivity {
         private boolean flStokSuccess;
 
         public GettingAllStok(String lastupDate, int page, int count) {
-            this.lastupDate = lastupDate;
+            this.lastupDate = getRawDate(lastupDate);
             this.count = count;
             this.page = page;
             this.jsonStr = "{" +
-                    "\"sto_lastup_date\": \"" + lastupDate + "\"," +
+                    "\"sto_lastup_date\": \"" + this.lastupDate + "\"," +
                     "\"page_number\": " + page + "}";
         }
 
@@ -278,9 +370,9 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllStok(lastupDate, ++page, count).execute("http://192.168.0.47:3000/db/stoklar");
+                new GettingAllStok(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
             } else {
-                if(!flStokSuccess) {
+                if (!flStokSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
                     alert.setTitle("Dikkat")
                             .setMessage("Stok bilgileri güncellenirken hata oluştu.\n" +
@@ -303,16 +395,13 @@ public class UpdateDataActivity extends AppCompatActivity {
                 }
 
                 if (binding.barkodCheckBox.isChecked()) {
-                    String lastupDate = barkodBO.getLastupDate();
-                    new GettingAllBarkod(lastupDate, 0, 0).execute("http://192.168.0.47:3000/db/barkodlar");
+                    new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
                 } else if (binding.fiyatCheckBox.isChecked()) {
-                    String lastupDate = stokSatisFiyatBO.getLastupDate();
-                    new GettingAllFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
+                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
                 } else if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
                 } else {
-                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
-                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
+                    activeAllComponent();
                 }
             }
 
@@ -330,14 +419,13 @@ public class UpdateDataActivity extends AppCompatActivity {
         private boolean flBarkodSuccess;
 
         public GettingAllBarkod(String lastupDate, int page, int count) {
-            this.lastupDate = lastupDate;
+            this.lastupDate = getRawDate(lastupDate);
             this.count = count;
             this.page = page;
             this.jsonStr = "{" +
-                    "\"bar_lastup_date\": \"" + lastupDate + "\"," +
+                    "\"bar_lastup_date\": \"" + this.lastupDate + "\"," +
                     "\"page_number\": " + page + "}";
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -430,9 +518,9 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.168.0.47:3000/db/barkodlar");
+                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
             } else {
-                if(!flBarkodSuccess) {
+                if (!flBarkodSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
                     alert.setTitle("Dikkat")
                             .setMessage("Barkod bilgileri güncellenirken hata oluştu.\n" +
@@ -453,15 +541,12 @@ public class UpdateDataActivity extends AppCompatActivity {
                 } else {
                     binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
                 }
-
                 if (binding.fiyatCheckBox.isChecked()) {
-                    String lastupDate = stokSatisFiyatBO.getLastupDate();
-                    new GettingAllFiyat(lastupDate, 0, etiketDepoNo, depoNo, 0).execute("http://192.168.0.47:3000/db/fiyatlar");
+                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
                 } else if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
                 } else {
-                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
-                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
+                    activeAllComponent();
                 }
             }
 
@@ -481,18 +566,17 @@ public class UpdateDataActivity extends AppCompatActivity {
         private boolean flFiyatSuccess;
 
         public GettingAllFiyat(String lastUpdate, int page, int etiketDepo, int depo, int count) {
-            this.lastUpdate = lastUpdate;
+            this.lastUpdate = getRawDate(lastUpdate);
             this.count = count;
             this.page = page;
             this.etiketDepo = etiketDepo;
             this.depo = depo;
             this.jsonStr = "{" +
-                    "\"sfiyat_lastup_date\": \"" + lastUpdate + "\"," +
+                    "\"sfiyat_lastup_date\": \"" + this.lastUpdate + "\"," +
                     "\"etiketDepo\": \"" + etiketDepo + "\"," +
                     "\"depo\": \"" + depo + "\"," +
                     "\"page_number\": " + page + "}";
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -533,6 +617,7 @@ public class UpdateDataActivity extends AppCompatActivity {
                         newSFiyat.setStok(stok);
                         newSFiyat.setSfiyat_listesirano(sfiyat.getInt(SQLiteHelper.SFIYAT_LISTESIRANO));
                         newSFiyat.setSfiyat_birim_pntr(sfiyat.getInt(SQLiteHelper.SFIYAT_BIRIM_PNTR));
+                        newSFiyat.setSfiyat_fiyati(sfiyat.getInt(SQLiteHelper.SFIYAT_FIYATI));
                         Depo depo = depoBO.getDepoById(sfiyat.getInt(SQLiteHelper.SFIYAT_DEPOSIRANO));
                         newSFiyat.setDepo(depo);
                         newSFiyat.setSfiyat_create_date(sfiyat.getString(SQLiteHelper.SFIYAT_CREATE_DATE).replace("T", " ").replace("Z", ""));
@@ -579,9 +664,9 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.168.0.47:3000/db/fiyatlar");
+                new GettingAllFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.127.2.194:3000/db/fiyatlar");
             } else {
-                if(!flFiyatSuccess) {
+                if (!flFiyatSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
                     alert.setTitle("Dikkat")
                             .setMessage("Fiyat bilgileri güncellenirken hata oluştu.\n" +
@@ -603,10 +688,9 @@ public class UpdateDataActivity extends AppCompatActivity {
                     binding.fiyatAktarimAdetText.setText("Fiyat tablosu hali hazırda güncel durumdadır.");
                 }
                 if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.168.0.47:3000/db/depolar");
+                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
                 } else {
-                    binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
-                    binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
+                    activeAllComponent();
                 }
 
             }
@@ -699,9 +783,9 @@ public class UpdateDataActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (count != 0) {
                 binding.depoAktarimAdetText.setText(count + " adet depo kaydı güncellendi. \nAktarım tamamlandı.\n");
-                new GettingAllKullanici(0).execute("http://192.168.0.47:3000/db/kullanicilar");
+                new GettingAllKullanici(0).execute("http://192.127.2.194:3000/db/kullanicilar");
             } else {
-                if(!flDepoSuccess) {
+                if (!flDepoSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
                     alert.setTitle("Dikkat")
                             .setMessage("Depo bilgileri güncellenirken hata oluştu.\n" +
@@ -790,7 +874,7 @@ public class UpdateDataActivity extends AppCompatActivity {
 
             } catch (IOException exception) {
                 exception.printStackTrace();
-                flKullaniciSuccess =  false;
+                flKullaniciSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
                 flKullaniciSuccess = false;
@@ -809,10 +893,9 @@ public class UpdateDataActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (count != 0) {
                 binding.depoAktarimAdetText.setText(count + " adet kullanıcı kaydı güncellendi. \nAktarım tamamlandı.");
-                binding.aktarimDurumuLabel.setTextColor(getResources().getColor(R.color.green_500));
-                binding.aktarimDurumuLabel.setText("Aktarım Tamamlandı");
                 db.close();
-            } else {
+            }
+            else {
                 AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
                 alert.setTitle("Dikkat")
                         .setMessage("Kullanıcı bilgileri güncellenirken hata oluştu.\n" +
@@ -826,6 +909,7 @@ public class UpdateDataActivity extends AppCompatActivity {
                         })
                         .show();
             }
+            activeAllComponent();
         }
 
     }
