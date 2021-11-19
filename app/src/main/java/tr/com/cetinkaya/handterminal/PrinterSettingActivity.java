@@ -147,7 +147,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
         Init_BluetoothSet();
 
         bluetoothPort = BluetoothPort.getInstance();
-        bluetoothPort.SetMacFilter(false);   //not using mac address filtering
+        //bluetoothPort.SetMacFilter(false);   //not using mac address filtering
 
         addPairedDevices();
 

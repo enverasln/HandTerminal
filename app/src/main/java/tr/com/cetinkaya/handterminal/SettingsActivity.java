@@ -23,8 +23,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void openPrinterSettingsActivity(View view) {
-        //Intent intent = new Intent(this, PrinterSettingsActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, PrinterSettingActivity.class);
+        startActivity(intent);
     }
 
     public void openDatabaseSettingsActivity(View view) {

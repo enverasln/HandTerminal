@@ -9,6 +9,7 @@ public enum BarkodTipi implements Serializable {
     BARKODLU_KIRMIZI_INDIRIM,
     BARKODSUZ_BEYAZ,
     BARKODLU_BEYAZ,
+    TAKSITLI_FIYAT,
     INDIRIMLI_RAF,
-    INDIRIMSIZ_RAF
+    INDIRIMSIZ_RAF,
 }
