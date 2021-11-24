@@ -85,6 +85,7 @@
         android:orientation="horizontal"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -94,6 +95,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:onClick="closeActivity"
             app:srcCompat="@drawable/ic_arrow_back"
             tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
@@ -102,9 +105,11 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/closeClothesMenuActivity"
+            android:gravity="center_vertical"
             android:text="Giyim Etiketleri"
             android:textColor="@color/white"
             android:textSize="20dp"

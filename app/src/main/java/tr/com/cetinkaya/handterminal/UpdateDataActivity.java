@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -93,12 +95,10 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     private void makeInvisibleInformationLabels() {
-
         binding.stokAktarimAdetText.setVisibility(View.GONE);
         binding.barkodAktarimAdetText.setVisibility(View.GONE);
         binding.fiyatAktarimAdetText.setVisibility(View.GONE);
         binding.depoAktarimAdetText.setVisibility(View.GONE);
-
         binding.stokAktarimAdetText.setText("");
         binding.barkodAktarimAdetText.setText("");
         binding.fiyatAktarimAdetText.setText("");
@@ -152,7 +152,6 @@ public class UpdateDataActivity extends AppCompatActivity {
         datePicker.show();
     }
 
-
     private String getShortDate(String date) {
         return date.substring(0, 10);
     }
@@ -166,7 +165,6 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         return formattedString;
     }
-
 
     private String getRawDate(String date) {
         String[] datePart = date.split("/");
@@ -202,6 +200,8 @@ public class UpdateDataActivity extends AppCompatActivity {
     }
 
     public void closeActivity(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -263,6 +263,14 @@ public class UpdateDataActivity extends AppCompatActivity {
         depoBO = new DepoBO(new DepoSQLiteDao(db));
         kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
         stokSatisFiyatBO = new StokSatisFiyatBO(new StokSatisFiyatSQLiteDao(db));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public class GettingAllStok extends AsyncTask<String, Integer, Boolean> {
@@ -381,6 +389,8 @@ public class UpdateDataActivity extends AppCompatActivity {
                             .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(UpdateDataActivity.this, SettingsActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                             })
@@ -529,6 +539,8 @@ public class UpdateDataActivity extends AppCompatActivity {
                             .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(UpdateDataActivity.this, SettingsActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                             })
@@ -675,6 +687,8 @@ public class UpdateDataActivity extends AppCompatActivity {
                             .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(UpdateDataActivity.this, SettingsActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                             })
@@ -794,6 +808,8 @@ public class UpdateDataActivity extends AppCompatActivity {
                             .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(UpdateDataActivity.this, SettingsActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                             })
@@ -904,6 +920,8 @@ public class UpdateDataActivity extends AppCompatActivity {
                         .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(UpdateDataActivity.this, SettingsActivity.class);
+                                startActivity(intent);
                                 finish();
                             }
                         })

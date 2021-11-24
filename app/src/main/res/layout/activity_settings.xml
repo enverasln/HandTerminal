@@ -80,7 +80,7 @@
             android:drawableTop="@drawable/ic_storage"
             android:drawablePadding="5dp"
             android:elevation="2dp"
-            android:onClick="openDatabaseSettingsActivity"
+            android:onClick="openUpdateDataSettingsActivity"
             android:padding="10dp"
             android:text="Veri\nGüncelleme"
             android:textColor="@color/white"
@@ -88,6 +88,22 @@
             app:layout_column="1"
             app:layout_row="0" />
 
+
+        <Button
+            android:id="@+id/databaseSettingsButton2"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/custom_button"
+            android:drawableTop="@drawable/ic_storage"
+            android:drawablePadding="5dp"
+            android:elevation="2dp"
+            android:onClick="openDatabaseSettingsActivity"
+            android:padding="10dp"
+            android:text="Database\nİşlemleri"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_column="0"
+            app:layout_row="1" />
 
         <LinearLayout
             android:layout_width="match_parent"

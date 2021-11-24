@@ -49,9 +49,19 @@ public class ClothesMenuActivity extends AppCompatActivity  {
         }
         intent.putExtra("barkodTipi", barkodTipi);
         startActivity(intent);
+        finish();
     }
 
     public void closeActivity(View view) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
         finish();
     }
 }

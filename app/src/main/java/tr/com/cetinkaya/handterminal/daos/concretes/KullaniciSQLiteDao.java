@@ -38,7 +38,6 @@ public class KullaniciSQLiteDao implements IKullaniciDao {
 
             }
             c.close();
-            sqLiteDatabase.close();
         } catch (Exception exception) {
             Log.e("[KULLANICILAR]", exception.getMessage());
         }
@@ -87,7 +86,8 @@ public class KullaniciSQLiteDao implements IKullaniciDao {
     public void insertKullanici(Kullanici kullanici) {
         try {
             ContentValues values = getContentValues(kullanici);
-            sqLiteDatabase.insert(SQLiteHelper.DEPOLAR, null, values);
+
+            sqLiteDatabase.insert(SQLiteHelper.KULLANICILAR, null, values);
 
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());

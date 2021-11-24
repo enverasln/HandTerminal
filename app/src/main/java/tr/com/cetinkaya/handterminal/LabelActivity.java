@@ -139,14 +139,18 @@ public class LabelActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert
-                .setTitle("Error")
-                .setMessage("The Bluetooth connection is lost.")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setTitle("Dikkat")
+                .setMessage("Bluetooh bağlanatısı koptu. Bağlantıyı kontrol ediniz ve tekrar deneyiniz.")
+                .setPositiveButton("TAMAM", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                        dialog.dismiss();
+                        Intent intent = new Intent(LabelActivity.this, ClothesMenuActivity.class);
+                        if(barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF)) {
+                            intent= new Intent(LabelActivity.this, GroceryMenuActivity.class);
+                        }
+                        startActivity(intent);
+                        finish();
                     }
                 })
                 .show();
@@ -273,7 +277,11 @@ public class LabelActivity extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // TODO Auto-generated method stub
+                                Intent intent = new Intent(LabelActivity.this, ClothesMenuActivity.class);
+                                if(barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF)) {
+                                    intent= new Intent(LabelActivity.this, GroceryMenuActivity.class);
+                                }
+                                startActivity(intent);
                                 finish();
                             }
                         })
@@ -389,6 +397,21 @@ public class LabelActivity extends AppCompatActivity {
     }
 
     public void closeLabelActivity(View view) {
+        Intent intent = new Intent(this, ClothesMenuActivity.class);
+        if(barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF)) {
+            intent= new Intent(this, GroceryMenuActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, ClothesMenuActivity.class);
+        if(barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF)) {
+            intent= new Intent(this, GroceryMenuActivity.class);
+        }
+        startActivity(intent);
         finish();
     }
 

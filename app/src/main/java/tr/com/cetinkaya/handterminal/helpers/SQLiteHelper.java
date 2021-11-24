@@ -108,7 +108,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             DEPO_NO + " INTEGER);";
 
 
-
     public SQLiteHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, database_version);
     }
@@ -121,14 +120,230 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(createStoklarSQL);
         db.execSQL(createKullanicilarSQL);
 
+        String sql = "";
+        // insert stores
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES (1,'MERKEZ');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(2,'DUDULLU');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(3,'KADIKÖY');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(4,'ÜSKÜDAR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(5,'BEYOĞLU');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(6,'GAZİOSMANPAŞA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(7,'BAKIRKÖY');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(8,'ANTALYA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(9,'KURUKÖPRÜ');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(10,'İZMİT');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(12,'MAVİBULVAR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(13,'MERSİN');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(14,'POZCU');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(15,'HAL DEPO');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(16,'KARGIPINAR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(17,'MARAŞ PİAZZA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(18,'BOLU 14 BURDA AVM.');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(19,'ANKARA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(20,'PAKETLEME');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(21,'ADANA İMALAT');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(22,'DUDULLU IMALAT');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(23,'DUDULLU TOPTAN');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(24,'ETİKET');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(25,'ŞİRİNEVLER');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(26,'İZMİR KONAK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(27,'PENDİK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(28,'BAĞCILAR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(29,'MERTER');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(31,'BURSA HEYKEL');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(32,'ŞANLIURFA PİAZZA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(33,'GAZİANTEP M1');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(34,'ŞEHİTKAMİL');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(35,'İTHALAT DEPO');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(36,'DENİZLİ AVM.');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(37,'BURSA ALTIPARMAK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(39,'TRABZON CEVAHİR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(40,'E TİCARET');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(41,'TRABZON VARLIBAŞ AVM');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(42,'KIRIKKALE');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(43,'ATLASPARK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(44,'MALATYA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(45,'SAKARYA ADA AVM');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(46,'PİYU SOLİ');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(47,'PİYU YARENLİK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(48,'PİYU KUVAYİ MİLLİYE');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(49,'PİYU ŞEHİT İSHAK');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(50,'TARSUS HÜKÜMET KONAĞI');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(51,'PİYU KIZKALESİ');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(52,'PİYU TEKİR');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(97,'İHRACAT DEPO');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(98,'GUZELYALI');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(99,'TRANSFER DEPOSU');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(555,'TEST MAGAZA');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(986,'E TİCARET VİRMAN');\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO DEPOLAR(dep_no, dep_adi) VALUES(987,'GÜNEY SİPARİŞ MERKEZİ');";
+        db.execSQL(sql);
+
+        // insert users
+
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('mbt','00',1,1)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('22','00',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('112','00',1,2)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('701','00',1,2)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('702','702',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('703','703',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('704','704',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('705','705',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('706','706',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('707','707',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('708','708',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('709','709',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('710','710',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('711','711',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('712','712',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('713','713',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('714','714',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('715','715',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('513','341325*',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('514','00',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('501','00',1,5)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('169','00',1,4)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('166','00',1,5)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('180','00',1,19)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('300','00',1,13)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('227','00',1,9)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('127','00',1,3)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('159','00',1,6)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('409','00',1,8)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('419','00',1,25)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('136','00',1,7)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('433','00',1,28)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('195','00',1,27)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('459','00',1,37)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('217','00',1,10)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('277','00',1,12)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('336','00',1,14)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('377','00',1,16)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('582','00',1,17)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('585','00',1,18)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('592','00',1,40)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('593','00',1,26)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('435','00',1,31)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('495','00',1,32)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('461','00',1,33)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('914','00',1,34)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('489','00',1,36)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('483','00',1,39)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('393','00',1,44)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('562','00',1,45)\n";
+        db.execSQL(sql);
+        sql = "INSERT INTO KULLANICILAR(KullaniciAdi, Sifre, Aktif, DepoNo) VALUES('481','00',1,41)\n";
+        db.execSQL(sql);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
-
 
 
 }
