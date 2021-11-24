@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ffffff">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/printerSettingsRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_200"
+        android:orientation="horizontal"
+        android:translationZ="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/closePrinterImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="closeActivity"
+            app:srcCompat="@drawable/ic_arrow_back"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/closePrinterImage"
+            android:text="Yazıcı Ayarları"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintStart_toEndOf="@id/closePrinterImage" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/LinearLayout02"
@@ -15,35 +53,55 @@
             android:id="@+id/EditTextAddressBT"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:hint="88:6B:0F:XX:XX:XX"
             android:inputType="text"
-            android:hint="88:6B:0F:XX:XX:XX"/>
+            tools:ignore="TouchTargetSizeCheck" />
+
         <Button
-            android:text="CONNECT"
             android:id="@+id/ButtonConnectBT"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="2"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/custom_button"
+            android:text="CONNECT"
+            android:textColor="@color/white"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/LinearLayout03"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <Button
-            android:text="SEARCH"
             android:id="@+id/ButtonSearchBT"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
+            android:text="SEARCH"
+            android:textColor="@color/white" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/LinearLayout04"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <ListView
             android:id="@+id/ListView01"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

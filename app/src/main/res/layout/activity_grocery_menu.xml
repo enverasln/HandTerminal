@@ -54,11 +54,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/closeGroceryMenuActivity"
+            android:id="@+id/closeGroceryMenuImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:onClick="closeActivity"
             app:srcCompat="@drawable/ic_arrow_back"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -67,12 +69,12 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/closeGroceryMenuImage"
             android:text="Market Etiketleri"
             android:textColor="@color/white"
             android:textSize="20dp"
-            app:layout_constraintStart_toEndOf="@id/closeGroceryMenuActivity" />
+            app:layout_constraintStart_toEndOf="@id/closePrinterImage" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

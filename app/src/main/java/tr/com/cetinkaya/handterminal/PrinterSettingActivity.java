@@ -69,54 +69,53 @@ public class PrinterSettingActivity extends AppCompatActivity {
     boolean searchflags;
     private boolean disconnectflags;
 
-    private String str_SavedBT="";
+    private String str_SavedBT = "";
 
-    private void loadSettingFile()
-    {
+    private void loadSettingFile() {
         String line;
         BufferedReader fReader;
-        try
-        {
+        try {
             fReader = new BufferedReader(new FileReader(fileName));
-            while((line = fReader.readLine()) != null)
-            {
+            while ((line = fReader.readLine()) != null) {
                 str_SavedBT = line;
                 break;
             }
             fReader.close();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void saveSettingFile()
-    {
-        try
-        {
+    private void saveSettingFile() {
+        try {
             File tempDir = new File(dir);
-            if(!tempDir.exists())
-            {
+            if (!tempDir.exists()) {
                 tempDir.mkdir();
             }
             BufferedWriter fWriter = new BufferedWriter(new FileWriter(fileName));
 
             fWriter.write(str_SavedBT);
             fWriter.close();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+    }
+    
+    public void closeActivity(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -125,7 +124,6 @@ public class PrinterSettingActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_printer_setting);
 
-       
 
         loadSettingFile();
 
@@ -166,8 +164,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
 
                     String input_ip = edit_input.getText().toString();
 
-                    if(input_ip.equals(""))
-                    {
+                    if (input_ip.equals("")) {
                         alert
                                 .setTitle("Error")
                                 .setMessage("Input value is Null")
@@ -180,9 +177,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
                                     }
                                 })
                                 .show();
-                    }
-                    else
-                    {
+                    } else {
                         btConn(mBluetoothAdapter.getRemoteDevice(input_ip));
                     }
 
@@ -208,32 +203,27 @@ public class PrinterSettingActivity extends AppCompatActivity {
         });
     }
 
-    private void clearBtDevData()
-    {
+    private void clearBtDevData() {
         remoteDevices = new Vector<BluetoothDevice>();
     }
 
-    private void bluetoothSetup()
-    {
+    private void bluetoothSetup() {
         // Initialize
         clearBtDevData();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null)
-        {
+        if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
             return;
         }
-        if (!mBluetoothAdapter.isEnabled())
-        {
+        if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
 
-    public void ConnectionFailedDevice()
-    {
+    public void ConnectionFailedDevice() {
 
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -252,8 +242,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void Init_BluetoothSet()
-    {
+    public void Init_BluetoothSet() {
         bluetoothSetup();
 
         connectDevice = new BroadcastReceiver() {
@@ -261,14 +250,11 @@ public class PrinterSettingActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
 
-                if(BluetoothDevice.ACTION_ACL_CONNECTED.equals(action))
-                {
+                if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                     //Toast.makeText(getApplicationContext(), "BlueTooth Connect", Toast.LENGTH_SHORT).show();
-                }
-                else if(BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action))
-                {
+                } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                     try {
-                        if(bluetoothPort.isConnected())
+                        if (bluetoothPort.isConnected())
                             bluetoothPort.disconnect();
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
@@ -278,8 +264,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    if((btThread != null) && (btThread.isAlive()))
-                    {
+                    if ((btThread != null) && (btThread.isAlive())) {
                         btThread.interrupt();
                         btThread = null;
                     }
@@ -291,39 +276,29 @@ public class PrinterSettingActivity extends AppCompatActivity {
             }
         };
 
-        discoveryResult = new BroadcastReceiver()
-        {
+        discoveryResult = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent)
-            {
+            public void onReceive(Context context, Intent intent) {
                 String key;
                 boolean bFlag = true;
                 BluetoothDevice btDev;
                 BluetoothDevice remoteDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-                if(remoteDevice != null)
-                {
-                    if(remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED)
-                    {
-                        key = remoteDevice.getName() +"\n["+remoteDevice.getAddress()+"]";
+                if (remoteDevice != null) {
+                    if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                        key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "]";
+                    } else {
+                        key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "] [Paired]";
                     }
-                    else
-                    {
-                        key = remoteDevice.getName() +"\n["+remoteDevice.getAddress()+"] [Paired]";
-                    }
-                    if(bluetoothPort.isValidAddress(remoteDevice.getAddress()))
-                    {
-                        for(int i = 0; i < remoteDevices.size(); i++)
-                        {
+                    if (bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
+                        for (int i = 0; i < remoteDevices.size(); i++) {
                             btDev = remoteDevices.elementAt(i);
-                            if(remoteDevice.getAddress().equals(btDev.getAddress()))
-                            {
+                            if (remoteDevice.getAddress().equals(btDev.getAddress())) {
                                 bFlag = false;
                                 break;
                             }
                         }
-                        if(bFlag)
-                        {
+                        if (bFlag) {
                             remoteDevices.add(remoteDevice);
                             adapter.add(key);
                         }
@@ -334,54 +309,45 @@ public class PrinterSettingActivity extends AppCompatActivity {
 
         registerReceiver(discoveryResult, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
-        searchStart = new BroadcastReceiver()
-        {
+        searchStart = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent)
-            {
+            public void onReceive(Context context, Intent intent) {
                 //Toast.makeText(mainView, "블루투스 기기 검색 시작", Toast.LENGTH_SHORT).show();
             }
         };
         registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
 
-        searchFinish = new BroadcastReceiver()
-        {
+        searchFinish = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent)
-            {
+            public void onReceive(Context context, Intent intent) {
                 searchflags = true;
             }
         };
         registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
     }
 
-    private void addPairedDevices()
-    {
+    private void addPairedDevices() {
         BluetoothDevice pairedDevice;
         Iterator<BluetoothDevice> iter = (mBluetoothAdapter.getBondedDevices()).iterator();
 
         String key = "";
 
-        while(iter.hasNext())
-        {
+        while (iter.hasNext()) {
             pairedDevice = iter.next();
-            if(bluetoothPort.isValidAddress(pairedDevice.getAddress()))
-            {
+            if (bluetoothPort.isValidAddress(pairedDevice.getAddress())) {
                 int deviceNum = pairedDevice.getBluetoothClass().getMajorDeviceClass();
 
-                if(deviceNum == BT_PRINTER)
-                {
+                if (deviceNum == BT_PRINTER) {
                     remoteDevices.add(pairedDevice);
 
-                    key = pairedDevice.getName() +"\n["+pairedDevice.getAddress()+"] [Paired]";
+                    key = pairedDevice.getName() + "\n[" + pairedDevice.getAddress() + "] [Paired]";
                     adapter.add(key);
                 }
             }
         }
     }
 
-    private void SearchingBTDevice()
-    {
+    private void SearchingBTDevice() {
         adapter.clear();
         adapter.notifyDataSetChanged();
 
@@ -389,12 +355,12 @@ public class PrinterSettingActivity extends AppCompatActivity {
         mBluetoothAdapter.startDiscovery();
     }
 
-    private class CheckTypesTask extends AsyncTask<Void, Void, Void>{
+    private class CheckTypesTask extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog asyncDialog = new ProgressDialog(PrinterSettingActivity.this);
 
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             asyncDialog.setMessage("Searching the Printer...");
             asyncDialog.setCancelable(false);
@@ -409,15 +375,16 @@ public class PrinterSettingActivity extends AppCompatActivity {
             asyncDialog.show();
             SearchingBTDevice();
             super.onPreExecute();
-        };
+        }
+
+        ;
 
         @Override
         protected Void doInBackground(Void... params) {
             // TODO Auto-generated method stub
             try {
-                while(true)
-                {
-                    if(searchflags)
+                while (true) {
+                    if (searchflags)
                         break;
 
                     Thread.sleep(100);
@@ -430,30 +397,29 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result){
-            if(asyncDialog.isShowing())
+        protected void onPostExecute(Void result) {
+            if (asyncDialog.isShowing())
                 asyncDialog.dismiss();
 
             searchflags = false;
             super.onPostExecute(result);
-        };
+        }
+
+        ;
     }
 
-    private void btConn(final BluetoothDevice btDev) throws IOException
-    {
+    private void btConn(final BluetoothDevice btDev) throws IOException {
         new connBT().execute(btDev);
     }
 
-    class connBT extends AsyncTask<BluetoothDevice, Void, Integer>
-    {
+    class connBT extends AsyncTask<BluetoothDevice, Void, Integer> {
         private final ProgressDialog dialog = new ProgressDialog(PrinterSettingActivity.this);
         AlertDialog.Builder alert = new AlertDialog.Builder(PrinterSettingActivity.this);
 
         String str_temp = "";
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.setMessage("Connecting Device...");
             dialog.setCancelable(false);
@@ -462,19 +428,15 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(BluetoothDevice... params)
-        {
+        protected Integer doInBackground(BluetoothDevice... params) {
             Integer retVal = null;
 
-            try
-            {
+            try {
                 bluetoothPort.connect(params[0]);
                 str_temp = params[0].getAddress();
 
                 retVal = Integer.valueOf(0);
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
                 retVal = Integer.valueOf(-1);
             }
@@ -483,12 +445,11 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Integer result)
-        {
-            if(dialog.isShowing())
+        protected void onPostExecute(Integer result) {
+            if (dialog.isShowing())
                 dialog.dismiss();
 
-            if(result.intValue() == 0)	// Connection success.
+            if (result.intValue() == 0)    // Connection success.
             {
                 RequestHandler rh = new RequestHandler();
                 btThread = new Thread(rh);
@@ -505,8 +466,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
                 /*Intent in = new Intent(PrinterSettingActivity.this, HomeActivity.class);
                 in.putExtra("Connection", "BlueTooth");
                 startActivity(in);*/
-            }
-            else	// Connection failed.
+            } else    // Connection failed.
             {
                 alert
                         .setTitle("Error")
@@ -525,14 +485,13 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
     }
 
-    public void DisconnectDevice()
-    {
+    public void DisconnectDevice() {
         try {
             bluetoothPort.disconnect();
 
             unregisterReceiver(connectDevice);
 
-            if((btThread != null) && (btThread.isAlive()))
+            if ((btThread != null) && (btThread.isAlive()))
                 btThread.interrupt();
 
             disconnectflags = true;
@@ -546,24 +505,25 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
     }
 
-    public void ExcuteDisconnect()
-    {
+    public void ExcuteDisconnect() {
         BTdiscon = new ExcuteDisconnectBT();
         BTdiscon.execute();
     }
 
-    private class ExcuteDisconnectBT extends AsyncTask<Void, Void, Void>{
+    private class ExcuteDisconnectBT extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog asyncDialog = new ProgressDialog(PrinterSettingActivity.this);
 
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             asyncDialog.setMessage("Disconnecting Device...");
             asyncDialog.setCancelable(false);
             asyncDialog.show();
             super.onPreExecute();
-        };
+        }
+
+        ;
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -571,9 +531,8 @@ public class PrinterSettingActivity extends AppCompatActivity {
             try {
                 DisconnectDevice();
 
-                while(true)
-                {
-                    if(disconnectflags)
+                while (true) {
+                    if (disconnectflags)
                         break;
 
                     Thread.sleep(100);
@@ -586,11 +545,13 @@ public class PrinterSettingActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result){
+        protected void onPostExecute(Void result) {
             asyncDialog.dismiss();
             disconnectflags = false;
             super.onPostExecute(result);
-        };
+        }
+
+        ;
     }
 
     @Override
@@ -600,8 +561,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
 
         try {
 
-            if(bluetoothPort.isConnected())
-            {
+            if (bluetoothPort.isConnected()) {
                 bluetoothPort.disconnect();
                 unregisterReceiver(connectDevice);
             }
@@ -614,8 +574,7 @@ public class PrinterSettingActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if((btThread != null) && (btThread.isAlive()))
-        {
+        if ((btThread != null) && (btThread.isAlive())) {
             btThread.interrupt();
             btThread = null;
         }

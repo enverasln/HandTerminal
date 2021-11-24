@@ -28,15 +28,20 @@ public class HomeActivity extends AppCompatActivity {
     public void buttonPrintClothesOnClick(View view) {
         Intent intent = new Intent(this, ClothesMenuActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void buttonPrintGroceryOnClick(View view) {
         Intent intent = new Intent(this, GroceryMenuActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void openSettingsActivity(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+        finish();
     }
+
+
 }

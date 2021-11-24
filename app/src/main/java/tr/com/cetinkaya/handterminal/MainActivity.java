@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 
+import tr.com.cetinkaya.handterminal.business.concretes.DepoBO;
 import tr.com.cetinkaya.handterminal.business.concretes.KullaniciBO;
+import tr.com.cetinkaya.handterminal.daos.concretes.DepoSQLiteDao;
 import tr.com.cetinkaya.handterminal.daos.concretes.KullaniciSQLiteDao;
 import tr.com.cetinkaya.handterminal.databinding.ActivityMainBinding;
 import tr.com.cetinkaya.handterminal.helpers.Helper;
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
+import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.Kullanici;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,83 +45,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        loadDatabase();
-        //kullaniciGetir();
-
+        //loadDatabase();
     }
 
 
-   /* private void kullaniciGetir() {
-
-        String url = String.format("%s/db/stoklar", Helper.API_URL);
-        try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("sto_lastup_date", "2011-02-11 10:40:49.237");
-            jsonBody.put("page_number", 1);
-
-            final String mRequestBody = jsonBody.toString();
-
-            StringRequest istek = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.e("Cevap", response);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-
-                        JSONArray kullaniciList = jsonObject.getJSONArray("data");
-                        for (int i = 0; i < kullaniciList.length(); i++) {
-
-                        JSONObject kullanici = kullaniciList.getJSONObject(i);
-
-                        String kullaniciAdi = kullanici.getString("sto_kod");
-                        String sifre = kullanici.getString("sto_isim");
-                        int aktif = kullanici.getInt("sto_birim1_katsayi");
-                        Log.e("Cevap", kullaniciAdi + " " + sifre + " " + aktif);
-
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Cevap", error.toString());
-                }
-            }){
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            Volley.newRequestQueue(this).add(istek);
-        }catch(JSONException exception) {
-            exception.printStackTrace();
-        }
-
-    }*/
-
-    /**
-     *
-     */
     public void login(View view) {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
         KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
-        Kullanici kullanici = kullaniciBO.getKullaniciWithKullaniciAdiAndSifre(binding.userNameText.getText().toString(),
+
+        int kullaniciSayisi = kullaniciBO.getCount();
+/*
+        if(kullaniciSayisi == 0) {
+            createMBTuser();
+        }*/
+
+        Kullanici kullanici = kullaniciBO.getKullaniciWithKullaniciAdiAndSifre(
+                binding.userNameText.getText().toString(),
                 binding.passwordText.getText().toString());
 
         if (kullanici != null) {
@@ -127,15 +70,35 @@ public class MainActivity extends AppCompatActivity {
             sharedPreferences.edit().putInt("depoNo", kullanici.getDepo().getDep_no()).apply();
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
-
+            finish();
         }
 
     }
 
-    /**
-     * Check user table count. If the count is 0, load external database
-     * from ./DCIM/MobilEtiket directory to internal database
-     */
+
+    private void createMBTuser() {
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
+        SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+
+        KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
+        DepoBO depoBO = new DepoBO(new DepoSQLiteDao((db)));
+
+        Depo depo = new Depo();
+        depo.setDep_adi("MERKEZ");
+        depo.setDep_no(1);
+
+        depoBO.insertDepo(depo);
+
+        Kullanici kullanici = new Kullanici();
+        kullanici.setKullanciadi("mbt");
+        kullanici.setSifre("00");
+        kullanici.setDepo(depo);
+        kullanici.setAktif(1);
+
+        kullaniciBO.insertKullanici(kullanici);
+        db.close();
+    }
+
     private void loadDatabase() {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
@@ -154,6 +117,5 @@ public class MainActivity extends AppCompatActivity {
                 exception.printStackTrace();
             }
         }
-
     }
 }
