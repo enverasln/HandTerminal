@@ -8,7 +8,7 @@ public class StokSatisFiyat implements Serializable {
     private int sfiyat_listesirano;
     private int sfiyat_birim_pntr;
     private Depo depo;
-    private float sfiyat_fiyati;
+    private double sfiyat_fiyati;
     private String sfiyat_create_date;
     private String sfiyat_lastup_date;
 
@@ -66,11 +66,11 @@ public class StokSatisFiyat implements Serializable {
         this.depo = depo;
     }
 
-    public float getSfiyat_fiyati() {
+    public double getSfiyat_fiyati() {
         return sfiyat_fiyati;
     }
 
-    public void setSfiyat_fiyati(float sfiyat_fiyati) {
+    public void setSfiyat_fiyati(double sfiyat_fiyati) {
         this.sfiyat_fiyati = sfiyat_fiyati;
     }
 

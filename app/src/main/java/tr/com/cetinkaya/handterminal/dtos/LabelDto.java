@@ -31,7 +31,7 @@ public class LabelDto {
         private int yerliUretim = 0;
         private String mensei;
 
-        public Builder(String barkod, String stokKodu, String stokAdi, float satisFiyati, String reyon) {
+        public Builder(String barkod, String stokKodu, String stokAdi, double satisFiyati, String reyon) {
             this.barkod = barkod;
             this.stokKodu = stokKodu;
             this.stokAdi = stokAdi;

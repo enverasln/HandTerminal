@@ -50,6 +50,7 @@ import tr.com.cetinkaya.handterminal.daos.concretes.StokSQLiteDao;
 import tr.com.cetinkaya.handterminal.daos.concretes.StokSatisFiyatSQLiteDao;
 import tr.com.cetinkaya.handterminal.databinding.ActivityUpdateDataBinding;
 
+import tr.com.cetinkaya.handterminal.helpers.Helper;
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
 import tr.com.cetinkaya.handterminal.models.Barkod;
 import tr.com.cetinkaya.handterminal.models.Depo;
@@ -242,15 +243,15 @@ public class UpdateDataActivity extends AppCompatActivity {
 
 
         if (binding.stokCheckBox.isChecked()) {
-            new GettingAllStok(binding.stokTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/stoklar");
+            new GettingAllStok(binding.stokTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "stoklar");
         } else if (binding.barkodCheckBox.isChecked()) {
-            new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+            new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "barkodlar");
 
         } else if (binding.fiyatCheckBox.isChecked()) {
-            new GettingAllFiyat(binding.barkodTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+            new GettingAllFiyat(binding.barkodTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute(Helper.API_URL + "fiyatlar");
 
         } else if (binding.depoCheckBox.isChecked()) {
-            new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+            new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
         }
 
     }
@@ -378,7 +379,7 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllStok(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/stoklar");
+                new GettingAllStok(lastupDate, ++page, count).execute(Helper.API_URL + "stoklar");
             } else {
                 if (!flStokSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
@@ -405,11 +406,11 @@ public class UpdateDataActivity extends AppCompatActivity {
                 }
 
                 if (binding.barkodCheckBox.isChecked()) {
-                    new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute("http://192.127.2.194:3000/db/barkodlar");
+                    new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "barkodlar");
                 } else if (binding.fiyatCheckBox.isChecked()) {
-                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute(Helper.API_URL + "fiyatlar");
                 } else if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                    new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
                 } else {
                     activeAllComponent();
                 }
@@ -528,7 +529,7 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllBarkod(lastupDate, ++page, count).execute("http://192.127.2.194:3000/db/barkodlar");
+                new GettingAllBarkod(lastupDate, ++page, count).execute(Helper.API_URL + "barkodlar");
             } else {
                 if (!flBarkodSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
@@ -554,9 +555,9 @@ public class UpdateDataActivity extends AppCompatActivity {
                     binding.barkodAktarimAdetText.setText("Barkod tablosu hali hazırda güncel durumdadır.");
                 }
                 if (binding.fiyatCheckBox.isChecked()) {
-                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute("http://192.127.2.194:3000/db/fiyatlar");
+                    new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute(Helper.API_URL + "fiyatlar");
                 } else if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                    new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
                 } else {
                     activeAllComponent();
                 }
@@ -629,7 +630,7 @@ public class UpdateDataActivity extends AppCompatActivity {
                         newSFiyat.setStok(stok);
                         newSFiyat.setSfiyat_listesirano(sfiyat.getInt(SQLiteHelper.SFIYAT_LISTESIRANO));
                         newSFiyat.setSfiyat_birim_pntr(sfiyat.getInt(SQLiteHelper.SFIYAT_BIRIM_PNTR));
-                        newSFiyat.setSfiyat_fiyati(sfiyat.getInt(SQLiteHelper.SFIYAT_FIYATI));
+                        newSFiyat.setSfiyat_fiyati(sfiyat.getDouble(SQLiteHelper.SFIYAT_FIYATI));
                         Depo depo = depoBO.getDepoById(sfiyat.getInt(SQLiteHelper.SFIYAT_DEPOSIRANO));
                         newSFiyat.setDepo(depo);
                         newSFiyat.setSfiyat_create_date(sfiyat.getString(SQLiteHelper.SFIYAT_CREATE_DATE).replace("T", " ").replace("Z", ""));
@@ -676,7 +677,7 @@ public class UpdateDataActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                new GettingAllFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute("http://192.127.2.194:3000/db/fiyatlar");
+                new GettingAllFiyat(lastUpdate, ++page, etiketDepo, depo, count).execute(Helper.API_URL + "fiyatlar");
             } else {
                 if (!flFiyatSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
@@ -702,7 +703,7 @@ public class UpdateDataActivity extends AppCompatActivity {
                     binding.fiyatAktarimAdetText.setText("Fiyat tablosu hali hazırda güncel durumdadır.");
                 }
                 if (binding.depoCheckBox.isChecked()) {
-                    new GettingAllDepo(0).execute("http://192.127.2.194:3000/db/depolar");
+                    new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
                 } else {
                     activeAllComponent();
                 }
@@ -797,7 +798,7 @@ public class UpdateDataActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (count != 0) {
                 binding.depoAktarimAdetText.setText(count + " adet depo kaydı güncellendi. \nAktarım tamamlandı.\n");
-                new GettingAllKullanici(0).execute("http://192.127.2.194:3000/db/kullanicilar");
+                new GettingAllKullanici(0).execute(Helper.API_URL + "kullanicilar");
             } else {
                 if (!flDepoSuccess) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(UpdateDataActivity.this);
