@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     tools:context=".OtherSettingsActivity">
 
     <Button
@@ -22,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/yerliUretimDatabaseIndirButton"
+        android:id="@+id/DatabaseIndirButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -38,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/yerliUretimLogoIndirButton" />
 
     <Button
-        android:id="@+id/yerliUretimLogoIndirButton3"
+        android:id="@+id/loadDatabaseButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -51,5 +52,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yerliUretimDatabaseIndirButton" />
+        app:layout_constraintTop_toBottomOf="@+id/DatabaseIndirButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

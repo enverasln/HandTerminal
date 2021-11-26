@@ -10,6 +10,8 @@ import java.io.OutputStream;
 
 public class Helper {
     private static final String TAG = "HELPER";
+    public static final String API_URL = "http://192.127.1.82:5000/api/mobile-tag/db/";
+    public static final String APK_URL = "http://192.127.1.82:5000/mobile-tag/";
 
 
 

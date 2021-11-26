@@ -25,7 +25,6 @@ import java.io.File;
 
 import tr.com.cetinkaya.handterminal.business.concretes.KullaniciBO;
 import tr.com.cetinkaya.handterminal.daos.concretes.KullaniciSQLiteDao;
-import tr.com.cetinkaya.handterminal.helpers.BarkodTipi;
 import tr.com.cetinkaya.handterminal.helpers.Helper;
 import tr.com.cetinkaya.handterminal.helpers.SQLiteHelper;
 
@@ -56,17 +55,17 @@ public class OtherSettingsActivity extends AppCompatActivity {
     }
 
     public void startLogoDownload(View v) {
-        startDownload("http://192.127.2.194:3003/yerli100", "yerliuretim100.png");
-        startDownload("http://192.127.2.194:3003/yerli120", "yerliuretim120.png");
+        startDownload("imgs/yerli100", "yerliuretim100.png");
+        startDownload("imgs/yerli120", "yerliuretim120.png");
 
         v.setEnabled(false);
-        //findViewById(R.id.query).setEnabled(true);
+
     }
 
     public void startDbDownload(View v) {
         SharedPreferences sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
         int depoNo = sharedPreferences.getInt("depoNo",0);
-        startDownload("http://192.127.2.194:3003/db/"+depoNo , "BarkodEtiketDB.db");
+        startDownload("db/"+depoNo , "BarkodEtiketDB.db");
         v.setEnabled(false);
         //findViewById(R.id.query).setEnabled(true);
     }
@@ -87,7 +86,7 @@ public class OtherSettingsActivity extends AppCompatActivity {
     }
 
     private void startDownload(String strUri, String fileName) {
-        Uri uri = Uri.parse(strUri);
+        Uri uri = Uri.parse(Helper.APK_URL + strUri);
 
         String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/MobilEtiket/" + fileName;
         //Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), fileName);
@@ -121,14 +120,13 @@ public class OtherSettingsActivity extends AppCompatActivity {
                                             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DCIM,
                                                     "/MobilEtiket/" + fileName));
 
-                            findViewById(R.id.yerliUretimDatabaseIndirButton).setEnabled(true);
                         }
                     })
                     .setNegativeButton("Hayır", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             findViewById(R.id.yerliUretimLogoIndirButton).setEnabled(true);
-                            findViewById(R.id.yerliUretimDatabaseIndirButton).setEnabled(true);
+                            findViewById(R.id.DatabaseIndirButton).setEnabled(true);
                         }
                     })
                     .show();
@@ -214,7 +212,7 @@ public class OtherSettingsActivity extends AppCompatActivity {
     BroadcastReceiver onComplete = new BroadcastReceiver() {
         public void onReceive(Context ctxt, Intent intent) {
             findViewById(R.id.yerliUretimLogoIndirButton).setEnabled(true);
-            findViewById(R.id.yerliUretimDatabaseIndirButton).setEnabled(true);
+            findViewById(R.id.DatabaseIndirButton).setEnabled(true);
         }
     };
 
