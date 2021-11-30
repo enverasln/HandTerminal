@@ -352,11 +352,13 @@ public class LabelActivity extends AppCompatActivity {
                 title = "Kırmızı Bsuz. İndirim Etiketi";
                 binding.birimLabel.setVisibility(View.GONE);
                 binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
                 break;
             case BARKODLU_KIRMIZI_INDIRIM:
                 title = "Kırmızı Blu. İndirim Etiketi";
                 binding.birimLabel.setVisibility(View.GONE);
                 binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
                 break;
             case BARKODSUZ_BEYAZ:
                 title = "Beyaz Bsuz. Fiyat Etiketi";
@@ -378,6 +380,7 @@ public class LabelActivity extends AppCompatActivity {
                 binding.bedenLabel.setVisibility(View.GONE);
                 binding.taksitLabel.setVisibility(View.GONE);
                 binding.taksitliFiyatText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
                 break;
             case INDIRIMSIZ_RAF:
                 title = "Raf Etiketi";
@@ -387,6 +390,7 @@ public class LabelActivity extends AppCompatActivity {
                 binding.taksitliFiyatText.setVisibility(View.GONE);
                 binding.etiketLabel.setVisibility(View.GONE);
                 binding.etiketFiyatText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
                 break;
             case TAKSITLI_FIYAT:
                 title = "Taksitli Satış Fiyatı";
@@ -439,16 +443,33 @@ public class LabelActivity extends AppCompatActivity {
 
                         switch (barkodTipi) {
                             case BARKODSUZ_KIRMIZI_INDIRIM:
-                                printer.printBarkodsuzKırmızıEtiket(labelDto, count);
+                                if(binding.printDoubleLableCheckBox.isChecked()) {
+                                } else {
+                                    printer.printBarkodsuzKırmızıEtiket(labelDto, count);
+                                }
+
                                 break;
                             case BARKODLU_KIRMIZI_INDIRIM:
                                 printer.printBarkodluKırmızıEtiket(labelDto, count);
                                 break;
                             case BARKODSUZ_BEYAZ:
-                                printer.printBarkodsuzBeyazEtiket(labelDto, count);
+                                if(binding.printDoubleLableCheckBox.isChecked()) {
+                                    count = (int)Math.ceil(count/2.0);
+                                    printer.printCiftBarkodsuzBeyazEtiket(labelDto, count);
+                                } else {
+                                    printer.printBarkodsuzBeyazEtiket(labelDto, count);
+                                }
                                 break;
                             case BARKODLU_BEYAZ:
-                                printer.printBarkodluBeyazEtiket(labelDto, count);
+                                if(binding.printDoubleLableCheckBox.isChecked()) {
+                                    count = (int)Math.ceil(count/2.0);
+                                    printer.printCiftBarkodluBeyazEtiket(labelDto, count);
+                                } else {
+                                    printer.printBarkodluBeyazEtiket(labelDto, count);
+                                }
+
+
+
                                 break;
                             case TAKSITLI_FIYAT:
                                 printer.printTaksitliEtiket(labelDto, count);
