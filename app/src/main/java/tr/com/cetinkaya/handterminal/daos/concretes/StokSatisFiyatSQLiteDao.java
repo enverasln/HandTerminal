@@ -22,11 +22,11 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
     }
 
     @Override
-    public StokSatisFiyat getIndirimliFiyat(Barkod barkod, Depo depo) {
+    public StokSatisFiyat getDepoFiyati(Barkod barkod, Depo depo) {
         StokSatisFiyat stokSatisFiyat = null;
         try {
             String sql = String.format("SELECT * FROM STOK_SATIS_FIYAT_LISTELERI " +
-                    "WHERE sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
+                    "WHERE sfiyat_listesirano = 1 AND sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
                     "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date LIMIT 1",
                     barkod.getBar_birimpntr(), barkod.getStok().getSto_kod(),depo.getDep_no());
 
@@ -65,7 +65,7 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
         StokSatisFiyat stokSatisFiyat = null;
         try {
             String sql = String.format("SELECT * FROM STOK_SATIS_FIYAT_LISTELERI " +
-                            "WHERE sfiyat_listesirano = 1 AND sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
+                            "WHERE sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
                             "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date LIMIT 1",
                     barkod.getBar_birimpntr(), barkod.getStok().getSto_kod(),depo.getDep_no());
 
@@ -168,6 +168,7 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
 
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
+            Log.e(TAG, satisFiyat.getSfiyat_guid());
         }
         return result;
     }

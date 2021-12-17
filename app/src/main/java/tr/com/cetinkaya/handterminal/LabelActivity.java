@@ -392,10 +392,18 @@ public class LabelActivity extends AppCompatActivity {
                 binding.etiketFiyatText.setVisibility(View.GONE);
                 binding.printDoubleLableCheckBox.setVisibility(View.GONE);
                 break;
-            case TAKSITLI_FIYAT:
-                title = "Taksitli Satış Fiyatı";
+            case BARKODSUZ_TAKSITLI_FIYAT:
+                title = "Barkodsuz Taks. Satış Fiyatı";
                 binding.birimLabel.setVisibility(View.GONE);
                 binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODLU_TAKSITLI_FIYAT:
+                title = "Barkodlu Taks. Satış Fiyatı";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
         }
         binding.labelActivityTitleText.setText(title);
     }
@@ -467,12 +475,12 @@ public class LabelActivity extends AppCompatActivity {
                                 } else {
                                     printer.printBarkodluBeyazEtiket(labelDto, count);
                                 }
-
-
-
                                 break;
-                            case TAKSITLI_FIYAT:
-                                printer.printTaksitliEtiket(labelDto, count);
+                            case BARKODSUZ_TAKSITLI_FIYAT:
+                                printer.printBarkodsuzTaksitliEtiket(labelDto, count);
+                                break;
+                            case BARKODLU_TAKSITLI_FIYAT:
+                                printer.printBarkodluTaksitliEtiket(labelDto, count);
                                 break;
                             case INDIRIMSIZ_RAF:
                                 printer.printIndirimsizRafEtiket(labelDto, count);

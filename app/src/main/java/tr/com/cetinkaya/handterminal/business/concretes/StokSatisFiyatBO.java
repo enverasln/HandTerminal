@@ -1,7 +1,6 @@
 package tr.com.cetinkaya.handterminal.business.concretes;
 
 import tr.com.cetinkaya.handterminal.business.abstracts.IStokSatisFiyatBO;
-import tr.com.cetinkaya.handterminal.daos.abstracts.IBarkodDao;
 import tr.com.cetinkaya.handterminal.daos.abstracts.IStokSatisFiyatDao;
 import tr.com.cetinkaya.handterminal.models.Barkod;
 import tr.com.cetinkaya.handterminal.models.Depo;
@@ -16,8 +15,8 @@ public class StokSatisFiyatBO implements IStokSatisFiyatBO {
     }
 
     @Override
-    public StokSatisFiyat getIndirimliFiyat(Barkod barkod, Depo depo) {
-        return satisFiyatDao.getIndirimliFiyat(barkod, depo);
+    public StokSatisFiyat getDepoFiyati(Barkod barkod, Depo depo) {
+        return satisFiyatDao.getDepoFiyati(barkod, depo);
     }
 
     @Override

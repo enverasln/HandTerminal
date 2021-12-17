@@ -5,7 +5,7 @@ import tr.com.cetinkaya.handterminal.models.Depo;
 import tr.com.cetinkaya.handterminal.models.StokSatisFiyat;
 
 public interface IStokSatisFiyatBO {
-    StokSatisFiyat getIndirimliFiyat(Barkod barkod, Depo depo);
+    StokSatisFiyat getDepoFiyati(Barkod barkod, Depo depo);
 
     StokSatisFiyat getEtiketFiyat(Barkod barkod, Depo depo);
 
