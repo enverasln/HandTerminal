@@ -1,18 +1,12 @@
 package tr.com.cetinkaya.handterminal;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import tr.com.cetinkaya.handterminal.databinding.ActivityClothesMenuBinding;
-import tr.com.cetinkaya.handterminal.databinding.ActivityMainBinding;
 import tr.com.cetinkaya.handterminal.helpers.BarkodTipi;
 
 public class ClothesMenuActivity extends AppCompatActivity  {
@@ -41,7 +35,10 @@ public class ClothesMenuActivity extends AppCompatActivity  {
                 barkodTipi = BarkodTipi.BARKODSUZ_BEYAZ;
                 break;
             case R.id.buttonInstalmentPriceTag:
-                barkodTipi = BarkodTipi.TAKSITLI_FIYAT;
+                barkodTipi = BarkodTipi.BARKODSUZ_TAKSITLI_FIYAT;
+                break;
+            case R.id.buttonInstalmentPriceTagWithBarcode:
+                barkodTipi = BarkodTipi.BARKODLU_TAKSITLI_FIYAT;
                 break;
             default:
                 barkodTipi = BarkodTipi.BARKODLU_BEYAZ;

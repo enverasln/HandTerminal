@@ -36,7 +36,7 @@ public class LabelController implements ILabelController {
             String reyon = brkd.getStok().getSto_reyon_kodu();
             String beden = brkd.getBar_bedennumarasi();
             StokSatisFiyat etiketFiyat = satisFiyatBO.getEtiketFiyat(brkd, etiketDepo);
-            StokSatisFiyat satisFiyati = satisFiyatBO.getIndirimliFiyat(brkd, satisDepo);
+            StokSatisFiyat satisFiyati = satisFiyatBO.getDepoFiyati(brkd, satisDepo);
             StokSatisFiyat taksitliFiyat = satisFiyatBO.getTakstiliFiyat(brkd, satisDepo);
 
             return new LabelDto.Builder(barkod, stokKod, stokAdi, satisFiyati.getSfiyat_fiyati(), reyon)

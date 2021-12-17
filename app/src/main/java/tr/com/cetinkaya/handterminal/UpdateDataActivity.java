@@ -248,7 +248,7 @@ public class UpdateDataActivity extends AppCompatActivity {
             new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "barkodlar");
 
         } else if (binding.fiyatCheckBox.isChecked()) {
-            new GettingAllFiyat(binding.barkodTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute(Helper.API_URL + "fiyatlar");
+            new GettingAllFiyat(binding.fiyatTarihButton.getText().toString(), 0, etiketDepoNo, depoNo, 0).execute(Helper.API_URL + "fiyatlar");
 
         } else if (binding.depoCheckBox.isChecked()) {
             new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
@@ -623,10 +623,14 @@ public class UpdateDataActivity extends AppCompatActivity {
                     // Save the barkod to the database
                     for (int i = 0; i < stokJSONArray.length(); i++) {
                         JSONObject sfiyat = stokJSONArray.getJSONObject(i);
+                        System.out.println(sfiyat.toString());
                         StokSatisFiyat newSFiyat = new StokSatisFiyat();
 
                         newSFiyat.setSfiyat_guid(sfiyat.getString(SQLiteHelper.SFIYAT_GUID));
                         Stok stok = stokBO.getStokByStokKod(sfiyat.getString(SQLiteHelper.SFIYAT_STOKKOD));
+                        if(stok == null) {
+                            System.out.println("stok null");
+                        }
                         newSFiyat.setStok(stok);
                         newSFiyat.setSfiyat_listesirano(sfiyat.getInt(SQLiteHelper.SFIYAT_LISTESIRANO));
                         newSFiyat.setSfiyat_birim_pntr(sfiyat.getInt(SQLiteHelper.SFIYAT_BIRIM_PNTR));
