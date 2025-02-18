@@ -19,7 +19,7 @@ import java.util.List;
 
 
 public class ServerConnection extends AsyncTask<String, Void, Boolean> {
-    public static String API_URL = "http://192.127.2.194:3000";
+    public static String API_URL = "http://192.127.1.82:3000";
 
     private final String TAG = "ServerConnection";
     private String URL;

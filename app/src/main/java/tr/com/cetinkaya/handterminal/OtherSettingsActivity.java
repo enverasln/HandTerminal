@@ -19,9 +19,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+import android.view.Gravity;
 
 import tr.com.cetinkaya.handterminal.business.concretes.KullaniciBO;
 import tr.com.cetinkaya.handterminal.daos.concretes.KullaniciSQLiteDao;
@@ -32,12 +38,14 @@ public class OtherSettingsActivity extends AppCompatActivity {
 
     private DownloadManager mgr = null;
     private long lastDownload = -1L;
+//    private Object editTextTextPersonName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_settings);
-
 
         mgr = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         registerReceiver(onComplete,
@@ -70,10 +78,28 @@ public class OtherSettingsActivity extends AppCompatActivity {
         //findViewById(R.id.query).setEnabled(true);
     }
 
+    public void startDbDownload2(View v) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
+        int depoNo = sharedPreferences.getInt("depoNo",0);
+        findViewById(R.id.button3).setEnabled(false);
+//        v.setEnabled(false);
+        Toast.makeText(this, "uygulama indirme başladı..", Toast.LENGTH_LONG).show();
+        startDownload("db/" , "MobilEtiket.apk");
+//        v.setEnabled(true);
+//        Toast.makeText(this, "uygulama indirme başladı..", Toast.LENGTH_LONG).show();
+        //findViewById(R.id.query).setEnabled(true);
+
+    }
+
+
+
+
+
     public void loadDb(View v) {
-        v.setEnabled(false);
-        loadDatabase();
-        v.setEnabled(true);
+       // v.setEnabled(false);
+        //loadDatabase();
+        //v.setEnabled(true);
+        new LoadDatabaseTast().execute();
 
     }
 
@@ -127,6 +153,9 @@ public class OtherSettingsActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             findViewById(R.id.yerliUretimLogoIndirButton).setEnabled(true);
                             findViewById(R.id.DatabaseIndirButton).setEnabled(true);
+                            findViewById(R.id.button3).setEnabled(true);
+                            findViewById(R.id.button2).setEnabled(true);
+
                         }
                     })
                     .show();
@@ -140,12 +169,15 @@ public class OtherSettingsActivity extends AppCompatActivity {
                             .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
                                     DownloadManager.Request.NETWORK_MOBILE)
                             .setAllowedOverRoaming(false)
-                            .setTitle("Demo")
+                            .setTitle("indirme başladı..")
                             .setDescription("Something useful. No, really.")
                             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DCIM,
                                     "/MobilEtiket/" + fileName));
         }
-
+//        v.setEnabled(true);
+//        findViewById(R.id.button3).setEnabled(true);
+        Toast.makeText(this, "uygulama indirme tamamlandı..", Toast.LENGTH_LONG).show();
+  //      ((TextView)findViewById(R.id.txtMessage)).setText("İndirme işlemi tamamlandı.");
     }
 
 
@@ -187,6 +219,7 @@ public class OtherSettingsActivity extends AppCompatActivity {
 
             case DownloadManager.STATUS_PAUSED:
                 msg = "Download paused!";
+
                 break;
 
             case DownloadManager.STATUS_PENDING:
@@ -213,6 +246,8 @@ public class OtherSettingsActivity extends AppCompatActivity {
         public void onReceive(Context ctxt, Intent intent) {
             findViewById(R.id.yerliUretimLogoIndirButton).setEnabled(true);
             findViewById(R.id.DatabaseIndirButton).setEnabled(true);
+            findViewById(R.id.button3).setEnabled(true);
+            findViewById(R.id.button2).setEnabled(true);
         }
     };
 
@@ -222,9 +257,34 @@ public class OtherSettingsActivity extends AppCompatActivity {
         }
     };
 
+ //    btnVeriTabaniYedekle.setOnClickListener(new View.OnClickListener() {
+ //       private static final String TAG = "";
+
+ //       @Override
+
+    public void VeriTabaniYedekle(View v) {
+
+        new BackUpDatabase().execute();
+
+        findViewById(R.id.button2).setEnabled(false);
+//        v.setEnabled(false);
+
+        Toast.makeText(this, "Yedekleme islemi başladı....", Toast.LENGTH_LONG).show();
+        ((TextView)findViewById(R.id.txtMessage)).setText("Veritabanı yedekleme işlemi başladı..");
+//        Toast.makeText(getApplicationContext(),"Yedekleme islemi tamamlanmistir",Toast.LENGTH_LONG).show();
+
+// buradan
+
+
+ //           btnVeriTabaniYedekle.setEnabled(true);
+//        findViewById(R.id.button2).setEnabled(true);
+//        v.setEnabled(true);
+    }
+  //  );
     private void loadDatabase() {
         Toast.makeText(this, "Yedekten dönülüyor", Toast.LENGTH_LONG).show();
-        SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
+        ((TextView)findViewById(R.id.txtMessage)).setText("Veritabanı yedekten dönülüyor..");
+                SQLiteHelper sqLiteHelper = new SQLiteHelper(this);
         SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
 
         KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
@@ -243,16 +303,154 @@ public class OtherSettingsActivity extends AppCompatActivity {
 
 
         Toast.makeText(this, "Yedekten dönme işlemi tamamlanmıştır.", Toast.LENGTH_LONG).show();
+        ((TextView)findViewById(R.id.txtMessage)).setText("Veritabanı yedekten dönme işlemi tamamlandı..");
     }
 
 
-    public class LoadDatabaseTast extends AsyncTask<Integer, Integer, Integer> {
+    public class LoadDatabaseTast extends AsyncTask<Integer, Boolean, Boolean> {
 
 
         @Override
-        protected Integer doInBackground(Integer... integers) {
-            return null;
+        protected void onPreExecute() {
+            findViewById(R.id.loadDatabaseButton2).setEnabled(false);
+            ((TextView)findViewById(R.id.txtMessage)).setText("Veritabanı yedekten dönme işlemi başladı.");
+            super.onPreExecute();
+        }
+
+
+
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            //Toast.makeText(this, "Yedekten dönülüyor", Toast.LENGTH_LONG).show();
+            SQLiteHelper sqLiteHelper = new SQLiteHelper(getApplicationContext());
+            SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+
+            KullaniciBO kullaniciBO = new KullaniciBO(new KullaniciSQLiteDao(db));
+
+            int count = kullaniciBO.getCount();
+            System.out.println(count);
+
+            try {
+                String sourceDB = String.format("%s/MobilEtiket/%s.db",
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), SQLiteHelper.DATABASE_NAME);
+                String destinationDB = getDatabasePath(SQLiteHelper.DATABASE_NAME).toString();
+                Helper.loadDatabase(sourceDB, destinationDB);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
+
+            //Toast.makeText(this, "Yedekten dönme işlemi tamamlanmıştır.", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            findViewById(R.id.loadDatabaseButton2).setEnabled(true);
+            ((TextView)findViewById(R.id.txtMessage)).setText("Veri tabanı yedekten dönme işlemi tamamlandı.");
         }
     }
+
+
+    public class BackUpDatabase extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            findViewById(R.id.button2).setEnabled(false);
+            ((TextView)findViewById(R.id.txtMessage)).setText("Veri tabanı yedek işlemi başladı.");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            String veritabaniAdi=SQLiteHelper.DATABASE_NAME;
+            String yedekAlinacakKlasor="MobilEtiket";
+            File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),yedekAlinacakKlasor);
+            boolean success=false;
+            if(!file.exists()) {
+                success=file.mkdirs();
+                //Toast.makeText(this, "Klasor bulunamadı....", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Klasor bulunamadı....",Toast.LENGTH_LONG).show();
+            }
+            else
+                success=true;
+            //
+            if(success) {
+                //Toast.makeText(this, "Klasor oluşturuldu", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Klasor oluşturuldu..",Toast.LENGTH_LONG).show();
+            }
+            else {
+                //Toast.makeText(getApplicationContext(),"Klasor oluşturulamıyor. Manuel olarak Olusturunuz. DCIM Altına MobilEtiket olarak....",Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Klasor oluşturulamıyor. Manuel olarak Olusturunuz. DCIM Altına MobilEtiket olarak", Toast.LENGTH_LONG).show();
+
+
+            }
+            if(success)
+            {
+                //Ilk once db varsa silelim
+                if(file.isDirectory())
+                {
+                    String[] children = file.list();
+                    for (int i = 0; i < children.length; i++)
+                    {
+                        new File(file, children[i]).delete();
+                    }
+                }
+                //simdi artık kopyalayabiliriz.
+                try {
+
+
+
+                    File sd = file;
+
+
+                    if (sd.canWrite()) {
+                        final String inFileName =getDatabasePath(veritabaniAdi).toString();
+                        File dbFile = new File(inFileName);
+                        FileInputStream fis = new FileInputStream(dbFile);
+
+                        String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +"/" + yedekAlinacakKlasor+"/"+veritabaniAdi+".db";
+
+                        // Open the empty db as the output stream
+                        OutputStream output = new FileOutputStream(outFileName);
+
+                        // Transfer bytes from the inputfile to the outputfile
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = fis.read(buffer))>0){
+                            output.write(buffer, 0, length);
+                        }
+
+                        // Close the streams
+                        output.flush();
+                        output.close();
+                        fis.close();
+
+
+                        //Toast.makeText(getApplicationContext(),"Yedekleme islemi tamamlanmistir",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(this, "Yedekleme islemi tamamlanmistir....", Toast.LENGTH_LONG).show();
+                        //                      editTextTextPersonName ="Yedekleme islemi tamamlandı";
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        protected void onProgressUpdate(Integer... values) {
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            findViewById(R.id.button2).setEnabled(true);
+            ((TextView)findViewById(R.id.txtMessage)).setText("Veri tabanı yedek işlemi tamamlandı.");
+        }
+    }
+
+
 
 }

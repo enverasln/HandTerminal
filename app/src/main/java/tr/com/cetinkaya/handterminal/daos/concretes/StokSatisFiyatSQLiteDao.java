@@ -27,7 +27,7 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
         try {
             String sql = String.format("SELECT * FROM STOK_SATIS_FIYAT_LISTELERI " +
                     "WHERE sfiyat_listesirano = 1 AND sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
-                    "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date LIMIT 1",
+                    "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date DESC LIMIT 1",
                     barkod.getBar_birimpntr(), barkod.getStok().getSto_kod(),depo.getDep_no());
 
             Cursor c;
@@ -65,8 +65,8 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
         StokSatisFiyat stokSatisFiyat = null;
         try {
             String sql = String.format("SELECT * FROM STOK_SATIS_FIYAT_LISTELERI " +
-                            "WHERE sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
-                            "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date LIMIT 1",
+                            "WHERE sfiyat_listesirano = 1 and sfiyat_birim_pntr = %d AND sfiyat_stokkod = '%s' AND " +
+                            "sfiyat_deposirano = %d ORDER BY sfiyat_lastup_date DESC LIMIT 1",
                     barkod.getBar_birimpntr(), barkod.getStok().getSto_kod(),depo.getDep_no());
 
             Cursor c;

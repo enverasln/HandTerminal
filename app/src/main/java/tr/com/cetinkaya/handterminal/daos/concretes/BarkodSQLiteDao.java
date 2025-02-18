@@ -24,7 +24,7 @@ public class BarkodSQLiteDao implements IBarkodDao {
     public Barkod getBarkodWithBarkod(String barkodu) {
         Barkod barkod = null;
         try {
-            String sql = String.format("SELECT * FROM STOKLAR s INNER JOIN BARKOD_TANIMLARI bt ON bt.bar_stokkodu = s.sto_kod WHERE bt.bar_kodu = '%s'",barkodu);
+            String sql = String.format("SELECT * FROM STOKLAR s INNER JOIN BARKOD_TANIMLARI bt ON bt.bar_stokkodu = s.sto_kod WHERE bt.bar_kodu = '%s' ORDER BY bar_lastup_date DESC",barkodu);
 
             Cursor c;
             c = sqLiteDatabase.rawQuery(sql,null);

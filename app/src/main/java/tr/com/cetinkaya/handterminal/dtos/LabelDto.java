@@ -163,7 +163,7 @@ public class LabelDto {
 
     public double getIndirimOrani() {
         double indirimTutari = etiketFiyati - satisFiyati;
-        double indirimOrani = (indirimTutari * 100) / satisFiyati;
+        double indirimOrani = (indirimTutari * 100) / etiketFiyati;
         return indirimOrani;
     }
 

@@ -29,6 +29,9 @@ public class GroceryMenuActivity extends AppCompatActivity {
             case R.id.buttonShelfWithDiscount:
                 barkodTipi = BarkodTipi.INDIRIMLI_RAF;
                 break;
+            case R.id.buttonShelfWithDiscount2:
+                barkodTipi = BarkodTipi.ZUCCACIYE_RAF;
+                break;
             default:
                 barkodTipi = BarkodTipi.INDIRIMSIZ_RAF;
                 break;
