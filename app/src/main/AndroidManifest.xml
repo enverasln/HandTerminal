@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tr.com.cetinkaya.handterminal"
     android:versionCode="27"
-    android:versionName="27.0.0">
+    android:versionName="27.1.0">
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
