@@ -21,7 +21,7 @@ public class HomeActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", MODE_PRIVATE);
-        binding.homePageTitleText.setText("Mobil Etiket V27.- " + sharedPreferences.getString("userDepo",""));
+        binding.homePageTitleText.setText("Mobil Etiket V27.4- " + sharedPreferences.getString("userDepo",""));
 
     }
 
