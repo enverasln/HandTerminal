@@ -73,7 +73,7 @@ public class StokSQLiteDao implements IStokDao {
         Stok stok = null;
 
         try {
-            String sql = "SELECT *  FROM STOKLAR WHERE sto_kod = ?";
+            String sql = "SELECT *  FROM STOKLAR WHERE sto_kod = ? ORDER BY sto_lastup_date DESC";
 
 
             Cursor c;

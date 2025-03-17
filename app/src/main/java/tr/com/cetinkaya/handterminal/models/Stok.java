@@ -1,5 +1,7 @@
 package tr.com.cetinkaya.handterminal.models;
 
+import androidx.room.Entity;
+
 import java.io.Serializable;
 
 public class Stok implements Serializable {

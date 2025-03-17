@@ -40,6 +40,29 @@ public class ClothesMenuActivity extends AppCompatActivity  {
             case R.id.buttonInstalmentPriceTagWithBarcode:
                 barkodTipi = BarkodTipi.BARKODLU_TAKSITLI_FIYAT;
                 break;
+            case R.id.buttonInstalmentPriceRedTagWithBarcode:
+                barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_TAKSITLI_FIYAT;
+                break;
+            case R.id.buttonInstalmentPriceRedTagWithoutBarcode:
+                barkodTipi = BarkodTipi.BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT;
+                break;
+            case R.id.buttonInstalmentPriceRedTagWithoutBarcode_50:
+                barkodTipi = BarkodTipi.BARKODSUZ_KIRMIZI_50;
+                break;
+            case R.id.buttonInstalmentPriceRedTagWithBarcode_50:
+                barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_50;
+                break;
+
+
+
+            case R.id.buttonInstalmentPriceRedTagWithBarcode_51:
+                barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_TAKSITLI_50;
+                break;
+            case R.id.buttonInstalmentPriceRedTagWithoutBarcode_51:
+                barkodTipi = BarkodTipi.BARKODSUZ_KIRMIZI_TAKSITLI_50;
+                break;
+
+
             default:
                 barkodTipi = BarkodTipi.BARKODLU_BEYAZ;
                 break;

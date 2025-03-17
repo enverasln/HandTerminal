@@ -118,9 +118,12 @@
         android:textColor="@color/gray_500"
         android:textSize="14sp"
         app:layout_column="1"
+        app:layout_constraintBottom_toTopOf="@+id/editTextBarkodd"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fiyatAktarimAdetText"
+        app:layout_constraintVertical_bias="0.027"
         app:layout_row="0" />
 
     <RelativeLayout
@@ -185,6 +188,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:background="@drawable/custom_button"
+        android:enabled="false"
         android:onClick="setTarih"
         android:text="19/11/2021"
         android:textColor="@color/white"
@@ -198,6 +202,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:background="@drawable/custom_button"
+        android:enabled="false"
         android:onClick="setTarih"
         android:text="19/11/2021"
         android:textColor="@color/white"
@@ -212,6 +217,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:background="@drawable/custom_button"
+        android:enabled="false"
         android:onClick="setTarih"
         android:text="19/11/2021"
         android:textColor="@color/white"
@@ -261,5 +267,15 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/fiyatCheckBox"
         app:layout_constraintTop_toBottomOf="@+id/fiyatCheckBox" />
+
+    <EditText
+        android:id="@+id/editTextBarkodd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="BArkodd"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="617dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

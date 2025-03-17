@@ -10,84 +10,175 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
 
-        <Button
-            android:id="@+id/buttonRedDiscountWithoutBarcode"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodsuz Kırmızı İndirim Etiketi"
-            android:textColor="@color/white" />
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/buttonRedDiscountWithBarcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodlu Kırmızı İndirim Etiketi"
-            android:textColor="@color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonWhiteWithoutBarcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodsuz Beyaz Fiyat Etiketi"
-            android:textColor="@color/white" />
+                <Button
+                    android:id="@+id/buttonWhiteWithoutBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodsuz Beyaz Fiyat Etiketi"
+                    android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/buttonWhiteWithBarcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodlu Beyaz Fiyat Etiketi"
-            android:textColor="@color/white" />
+                <Button
+                    android:id="@+id/buttonWhiteWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodlu Beyaz Fiyat Etiketi"
+                    android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/buttonInstalmentPriceTag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodsuz Taksitli Fiyat Etiketi"
-            android:textColor="@color/white" />
+                <Button
+                    android:id="@+id/buttonRedDiscountWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodlu Kırmızı İndirim Etiketi"
+                    android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/buttonInstalmentPriceTagWithBarcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/custom_button"
-            android:onClick="openLabelPage"
-            android:text="Barkodlu Taksitli Fiyat Etiketi"
-            android:textColor="@color/white" />
+                <Button
+                    android:id="@+id/buttonRedDiscountWithoutBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodsuz Kırmızı İndirim Etiketi"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceTagWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodlu Taksitli Fiyat Etiketi"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Barkodsuz Taksitli Fiyat Etiketi"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithoutBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodsuz Taksitli  Etiket"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodlu Taksitli  Etiket"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithoutBarcode_50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodsuz %50"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithBarcode_50"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodlu %50"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithoutBarcode_51"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodsuz Taksitli %50"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonInstalmentPriceRedTagWithBarcode_51"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Kırmızı Barkodlu Taksitli %50"
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -128,4 +219,5 @@
             android:textSize="20dp"
             app:layout_constraintStart_toEndOf="@id/closeClothesMenuActivity" />
     </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

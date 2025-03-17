@@ -2,14 +2,20 @@ package tr.com.cetinkaya.handterminal;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.view.View;
 
 import tr.com.cetinkaya.handterminal.business.concretes.DepoBO;
@@ -35,17 +41,36 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = this.getSharedPreferences("tr.com.cetinkaya.handterminal", Context.MODE_PRIVATE);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+     /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             String[] permissions = {
                     "android.permission.READ_EXTERNAL_STORAGE",
-                    "android.permission.WRITE_EXTERNAL_STORAGE"
+                    "android.permission.WRITE_EXTERNAL_STORAGE",
+                    "android.permission.MANAGE_EXTERNAL_STORAGE"
+
             };
             int requestCode = 200;
             requestPermissions(permissions, requestCode);
         }
-
-
         //loadDatabase();
+*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                startActivityForResult(intent, 2296);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, 2296);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+        }
+
+
     }
 
 
@@ -74,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
     private void createMBTuser() {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(this);

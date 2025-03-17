@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +74,7 @@ public class UpdateDataActivity extends AppCompatActivity {
     private KullaniciBO kullaniciBO;
     private StokSatisFiyatBO stokSatisFiyatBO;
     private ActivityUpdateDataBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -340,6 +342,16 @@ public class UpdateDataActivity extends AppCompatActivity {
                         newStok.setSto_lastup_date(stok.getString("sto_lastup_date").replace("T", " ").replace("Z", ""));
 
 
+                        // Stok bilgisinin gelip gelmediğini kontrol etmek için kullanılmaktadır.
+                        if(!newStok.getSto_kod().isEmpty() && newStok.getSto_kod() != null) {
+                            String skod = newStok.getSto_kod();
+                            if(skod.equals("09.01.04.6084")) {
+                                System.out.println(skod);
+                            }
+
+
+                        }
+
                         if (stokBO.updateStok(newStok) == 0) {
                             stokBO.insertStok(newStok);
                             count++;
@@ -364,6 +376,9 @@ public class UpdateDataActivity extends AppCompatActivity {
                 flStokSuccess = false;
             } catch (JSONException exception) {
                 exception.printStackTrace();
+                flStokSuccess = false;
+            } catch (Exception exception) {
+                binding.stokAktarimAdetText.setText(exception.getMessage());
                 flStokSuccess = false;
             }
 
@@ -446,6 +461,8 @@ public class UpdateDataActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... urls) {
             flBarkodSuccess = true;
+            Barkod newBarkod;
+            String barkodStr = "";
             try {
                 StringEntity requestEntity = new StringEntity(jsonStr, "UTF-8");
                 requestEntity.setContentType("application/json");
@@ -469,10 +486,11 @@ public class UpdateDataActivity extends AppCompatActivity {
 
                     // Save the barkod to the database
                     for (int i = 0; i < stokJSONArray.length(); i++) {
-                        Barkod newBarkod = new Barkod();
+                        newBarkod = new Barkod();
                         JSONObject barkod = stokJSONArray.getJSONObject(i);
                         newBarkod.setBar_guid(barkod.getString(SQLiteHelper.BAR_GUID));
                         newBarkod.setBar_kodu(barkod.getString(SQLiteHelper.BAR_KODU));
+                        barkodStr = barkod.getString(SQLiteHelper.BAR_KODU);
                         newBarkod.setBar_birimpntr(barkod.getInt(SQLiteHelper.BAR_BIRIMPNTR));
                         newBarkod.setBar_bedenpntr(barkod.getInt(SQLiteHelper.BAR_BEDENPNTR));
                         newBarkod.setBar_bedennumarasi(barkod.getString(SQLiteHelper.BAR_BEDENNUMARASI));
@@ -483,10 +501,25 @@ public class UpdateDataActivity extends AppCompatActivity {
                                 .replace("T", " ")
                                 .replace("Z", ""));
 
+                        //binding.barkodAktarimAdetText.setText(count + " adet barkod kaydı güncellendi. \nAktarım tamamlandı.");
+                     //   binding.editTextBarkodd.setText(SQLiteHelper.BAR_KODU);
                         // Get Stok information from JsonObject
                         Stok stok = stokBO.getStokByStokKod(barkod.getString(SQLiteHelper.BAR_STOKKODU));
 
                         newBarkod.setStok(stok);
+
+                        // Stok kodundan barkodu kontrol etmek için kullanılmaktadır.
+                        if(newBarkod.getStok() == null) {
+                            continue;
+                        }
+
+                        if(newBarkod.getStok().getSto_kod() != null && !newBarkod.getStok().getSto_kod().isEmpty() ) {
+                            String skod = newBarkod.getStok().getSto_kod();
+                            if(skod.equals("08.04.08.7092")) {
+                                System.out.println(skod);
+                            }
+                        }
+
 
 
                         if (barkodBO.updateBarkod(newBarkod) == 0) {
@@ -503,7 +536,6 @@ public class UpdateDataActivity extends AppCompatActivity {
                 } else if (status == 404) {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
-
                     JSONObject jsonObject = new JSONObject(data);
                     Log.d(TAG, jsonObject.toString());
                     return true;
@@ -515,6 +547,10 @@ public class UpdateDataActivity extends AppCompatActivity {
             } catch (JSONException exception) {
                 exception.printStackTrace();
                 flBarkodSuccess = false;
+            } catch (Exception exception) {
+                System.out.println("barkod:" + barkodStr);
+                System.out.println("hata: " + exception.getMessage());
+                flBarkodSuccess = false;
             }
 
             return false;
@@ -523,6 +559,7 @@ public class UpdateDataActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             binding.barkodAktarimAdetText.setText("Barkod tablosu güncelleniyor. \nGüncellenen kayıt sayısı: " + values[0]);
+         //   binding.editTextBarkodd.setText(SQLiteHelper.BAR_KODU);
         }
 
         @Override
@@ -632,6 +669,14 @@ public class UpdateDataActivity extends AppCompatActivity {
                             System.out.println("stok null");
                         }
                         newSFiyat.setStok(stok);
+ /*                       if (stok.getSto_kod() == "08.01.07.80044"){
+                            System.out.println("hata var");
+                        }else
+                        {
+                            System.out.println("hata var2");
+                        }
+*/
+
                         newSFiyat.setSfiyat_listesirano(sfiyat.getInt(SQLiteHelper.SFIYAT_LISTESIRANO));
                         newSFiyat.setSfiyat_birim_pntr(sfiyat.getInt(SQLiteHelper.SFIYAT_BIRIM_PNTR));
                         newSFiyat.setSfiyat_fiyati(sfiyat.getDouble(SQLiteHelper.SFIYAT_FIYATI));
@@ -667,6 +712,10 @@ public class UpdateDataActivity extends AppCompatActivity {
             } catch (JSONException exception) {
                 exception.printStackTrace();
                 flFiyatSuccess = false;
+            } catch(Exception exception) {
+                binding.fiyatAktarimAdetText.setText(exception.getMessage());
+                flFiyatSuccess = false;
+                System.out.println(exception.getMessage());
             }
 
             return false;
