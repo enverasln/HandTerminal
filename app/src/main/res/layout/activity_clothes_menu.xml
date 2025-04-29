@@ -52,6 +52,18 @@
                     android:textColor="@color/white" />
 
                 <Button
+                    android:id="@+id/buttonVerticalWhiteWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Dikey Barkodlu Beyaz Fiyat Etiketi"
+                    android:textColor="@color/white" />
+
+                <Button
                     android:id="@+id/buttonRedDiscountWithBarcode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -61,6 +73,18 @@
                     android:background="@drawable/custom_button"
                     android:onClick="openLabelPage"
                     android:text="Barkodlu Kırmızı İndirim Etiketi"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/buttonVerticalRedDiscountWithBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/custom_button"
+                    android:onClick="openLabelPage"
+                    android:text="Dikey Barkodlu Kırmızı İndirim Etiketi"
                     android:textColor="@color/white" />
 
                 <Button

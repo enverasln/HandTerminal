@@ -4,6 +4,7 @@ public class LabelDto {
     private final String barkod;
     private final String stokKodu;
     private final String stokAdi;
+    private final String stokKisaAdi;
     private final String beden;
     private final double etiketFiyati;
     private final double satisFiyati;
@@ -20,6 +21,7 @@ public class LabelDto {
         private final String barkod;
         private final String stokKodu;
         private final String stokAdi;
+        private final String stokKisaAdi;
         private String beden = "";
         private double etiketFiyati = 0.0;
         private double satisFiyati;
@@ -31,10 +33,11 @@ public class LabelDto {
         private int yerliUretim = 0;
         private String mensei;
 
-        public Builder(String barkod, String stokKodu, String stokAdi, double satisFiyati, String reyon) {
+        public Builder(String barkod, String stokKodu, String stokAdi, String stokKisaAdi, double satisFiyati, String reyon) {
             this.barkod = barkod;
             this.stokKodu = stokKodu;
             this.stokAdi = stokAdi;
+            this.stokKisaAdi = stokKisaAdi;
             this.satisFiyati = satisFiyati;
             this.reyon = reyon == null ? "-" : reyon;
         }
@@ -88,6 +91,7 @@ public class LabelDto {
         barkod = builder.barkod;
         stokKodu = builder.stokKodu;
         stokAdi = builder.stokAdi;
+        stokKisaAdi = builder.stokKisaAdi;
         beden = builder.beden;
         etiketFiyati = builder.etiketFiyati;
         satisFiyati = builder.satisFiyati;
@@ -110,6 +114,10 @@ public class LabelDto {
 
     public String getStokAdi() {
         return stokAdi;
+    }
+
+    public String getStokKisaAdi() {
+        return stokKisaAdi;
     }
 
     public String getBeden() {
