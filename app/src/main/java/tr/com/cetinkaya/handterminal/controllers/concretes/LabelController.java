@@ -33,13 +33,14 @@ public class LabelController implements ILabelController {
         if(brkd != null) {
             String stokKod = brkd.getStok().getSto_kod();
             String stokAdi = brkd.getStok().getSto_isim();
+            String stokKisaAdi = brkd.getStok().getSto_kisa_ismi();
             String reyon = brkd.getStok().getSto_reyon_kodu();
             String beden = brkd.getBar_bedennumarasi();
             StokSatisFiyat etiketFiyat = satisFiyatBO.getEtiketFiyat(brkd, etiketDepo);
             StokSatisFiyat satisFiyati = satisFiyatBO.getDepoFiyati(brkd, satisDepo);
             StokSatisFiyat taksitliFiyat = satisFiyatBO.getTakstiliFiyat(brkd, satisDepo);
 
-            return new LabelDto.Builder(barkod, stokKod, stokAdi, satisFiyati.getSfiyat_fiyati(), reyon)
+            return new LabelDto.Builder(barkod, stokKod, stokAdi, stokKisaAdi, satisFiyati.getSfiyat_fiyati(), reyon)
                     .beden(beden)
                     .etiketFiyati(etiketFiyat.getSfiyat_fiyati())
                     .taksitFiyati(taksitliFiyat.getSfiyat_fiyati())

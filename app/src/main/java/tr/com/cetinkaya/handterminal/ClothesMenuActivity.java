@@ -28,6 +28,10 @@ public class ClothesMenuActivity extends AppCompatActivity  {
             case R.id.buttonRedDiscountWithoutBarcode:
                 barkodTipi = BarkodTipi.BARKODSUZ_KIRMIZI_INDIRIM;
                 break;
+
+            case R.id.buttonVerticalRedDiscountWithBarcode:
+                barkodTipi = BarkodTipi.DIKEY_BARKODLU_KIRMIZI_INDIRIM;
+                break;
             case R.id.buttonRedDiscountWithBarcode:
                 barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_INDIRIM;
                 break;
@@ -52,9 +56,9 @@ public class ClothesMenuActivity extends AppCompatActivity  {
             case R.id.buttonInstalmentPriceRedTagWithBarcode_50:
                 barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_50;
                 break;
-
-
-
+            case R.id.buttonVerticalWhiteWithBarcode:
+                barkodTipi = BarkodTipi.DIKEY_BARKODLU_BEYAZ;
+                break;
             case R.id.buttonInstalmentPriceRedTagWithBarcode_51:
                 barkodTipi = BarkodTipi.BARKODLU_KIRMIZI_TAKSITLI_50;
                 break;

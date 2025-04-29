@@ -176,6 +176,112 @@ public class SewooPrinterAdapter extends IPrinterAdapter {
         }
     }
 
+    public void printDikeyKirmiziBarkodluTaksitliEtiket(LabelDto labelDto, int count) {
+        try {
+            int nLineWidth = 400;
+            printer.setForm(0, 400, 512, 512, count);
+            printer.setMedia(paperType);
+
+            // printer.printAndroidFont(55, 45, Typeface.SANS_SERIF, false, false, labelDto.getBarkod(), nLineWidth, 20);
+            printer.printCPCLText(CPCLConst.LK_CPCL_90_ROTATION, CPCLConst.LK_CPCL_FONT_7, 0, 55,245, labelDto.getBarkod(), 1);
+            if(labelDto.getBarkod().length() > 11){
+                printer.printCPCLBarcode(CPCLConst.LK_CPCL_90_ROTATION,
+                        CPCLConst.LK_CPCL_BCS_EAN13,
+                        1, CPCLConst.LK_CPCL_BCS_0RATIO,
+                        50, 0, 260, labelDto.getBarkod(), 0);
+            } else {
+                printer.printCPCLBarcode(CPCLConst.LK_CPCL_90_ROTATION,
+                        CPCLConst.LK_CPCL_BCS_128,
+                        1, CPCLConst.LK_CPCL_BCS_0RATIO,
+                        50, 0, 260, labelDto.getBarkod(), 0);
+            }
+            int stokAdiLength = labelDto.getStokAdi().length();
+
+            String stokAdiSatir1 = " ";
+            String stokAdiSatir2 = " ";
+            String stokAdiSatir3 = " ";
+            if (stokAdiLength <= 25) {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, stokAdiLength - 1).trim();
+            } else if (stokAdiLength <= 50) {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, 25).trim();
+                stokAdiSatir2 = labelDto.getStokAdi().substring(25, stokAdiLength - 1).trim();
+            } else if (stokAdiLength < 75) {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, 25).trim();
+                stokAdiSatir2 = labelDto.getStokAdi().substring(25, 50).trim();
+                stokAdiSatir3 = labelDto.getStokAdi().substring(50, stokAdiLength - 1).trim();
+            } else {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, 25).trim();
+                stokAdiSatir2 = labelDto.getStokAdi().substring(25, 50).trim();
+                stokAdiSatir3 = labelDto.getStokAdi().substring(50, 75).trim();
+            }
+
+            String satisFiyatiStr = String.format("%.2f₺", labelDto.getSatisFiyati());
+            String taksitliFiyatStr = String.format("%.2f", labelDto.getTaksitFiyati());
+            String etiketFiyatStr = String.format("%.2f", labelDto.getEtiketFiyati());
+
+            if(!stokAdiSatir1.isEmpty())
+                printer.printAndroidFont(5, 0, Typeface.SANS_SERIF, true, false, stokAdiSatir1, nLineWidth, 24);
+
+            if(!stokAdiSatir2.isEmpty())
+                printer.printAndroidFont(5, 20, Typeface.SANS_SERIF, true, false, stokAdiSatir2, nLineWidth, 24);
+
+            if(!stokAdiSatir3.isEmpty())
+                printer.printAndroidFont(5, 40, Typeface.SANS_SERIF, true, false, stokAdiSatir3, nLineWidth, 24);
+
+            printer.printAndroidFont(80, 85, Typeface.SANS_SERIF, true, false, "Satış Fiyatı", nLineWidth, 28);
+            printer.printAndroidFont(80, 112, Typeface.SANS_SERIF, true, false, etiketFiyatStr, nLineWidth, 28);
+            int tlOteleme = (int) ((etiketFiyatStr.length() + 0.5) * 1.6 * 8);
+            printer.printAndroidFont(80 + tlOteleme, 112, Typeface.DEFAULT, true, false, "₺", nLineWidth, 28);
+
+            if (etiketFiyatStr.length() <= 5) {
+                printer.printLine(80, 95, 150, 120, 5);
+                printer.printLine(80, 120, 150, 95, 5);
+            } else {
+                printer.printLine(80, 95, 170, 120, 5);
+                printer.printLine(80, 120, 170, 95, 5);
+            }
+
+            printer.printAndroidFont(80, 150, Typeface.SANS_SERIF, true, false, "İnd. Satış Fiyat", nLineWidth, 28);
+            printer.printAndroidFont(80, 180, Typeface.SANS_SERIF, true, false, satisFiyatiStr, nLineWidth, 40);
+            tlOteleme = (int) ((satisFiyatiStr.length() + 0.5) * 2.2 * 8);
+
+            String beden = labelDto.getBeden();
+            if (beden != null && !beden.isEmpty()) {
+                printer.printAndroidFont(5, 275, Typeface.DEFAULT, false, false, "BEDEN", nLineWidth, 20);
+                printer.printAndroidFont(5, 295, Typeface.DEFAULT, true, false, beden, nLineWidth, 24);
+            }
+
+            printer.printAndroidFont(90, 275, Typeface.DEFAULT, false, false, "İNDİRİM", nLineWidth, 20);
+            printer.printAndroidFont(90, 295, Typeface.DEFAULT, false, false, "ORANI", nLineWidth, 20);
+            String indirimOraniStr = String.format("%.0f", labelDto.getIndirimOrani());
+            printer.printAndroidFont(180, 280, Typeface.DEFAULT, true, false, "%" + indirimOraniStr, nLineWidth, 38);
+
+            if (labelDto.getYerliUretim() == 0) {
+                final String yerliUretimLogo = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/MobiltegDB/yerliUretim100.png";
+                try {
+                    printer.printBitmap(yerliUretimLogo, 5, 330);
+                } catch (Exception e) {
+
+                }
+            }
+
+            printer.printAndroidFont(5, 375, Typeface.DEFAULT, true, false, "Fiyat Değ.Tarihi:", nLineWidth, 18);
+            String fiyatDegisiklikTarihi = getFormattedDate(labelDto.getFiyatDegTarihi().substring(0, 11));
+            printer.printAndroidFont(140, 375, Typeface.DEFAULT, true, false, fiyatDegisiklikTarihi, nLineWidth, 18);
+            printer.printAndroidFont(115, 330, Typeface.DEFAULT, true, false, "Menşei: ", nLineWidth, 18);
+            printer.printAndroidFont(115, 350, Typeface.DEFAULT, true, false, labelDto.getMensei(), nLineWidth, 18);
+
+            printer.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, CPCLConst.LK_CPCL_FONT_7, 0, 80,230, "KDV DAHILDIR", 1);
+
+
+            printer.printForm();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public void printBarkodsuzBeyazEtiket(LabelDto labelDto, int count) {
         try {
             int nLineWidth = 384;
@@ -430,6 +536,73 @@ public class SewooPrinterAdapter extends IPrinterAdapter {
             printer.printAndroidFont(413, 260, Typeface.DEFAULT, true, false, fiyatDegisiklikTarihi, nLineWidth, 20);
             printer.printAndroidFont(0, 285, Typeface.DEFAULT, true, false, "Menşei: " + labelDto.getMensei(), nLineWidth, 24);
             printer.printAndroidFont(310, 285, Typeface.DEFAULT, true, false, "Menşei: " + labelDto.getMensei(), nLineWidth, 24);
+
+            printer.printForm();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void printDikeyBarkodluBeyazEtiket(LabelDto labelDto, int count) {
+        try {
+            int nLineWidth = 384;
+            printer.setForm(0, 384, 406, 406, count);
+            printer.setMedia(paperType);
+
+            int stokAdiLength = labelDto.getStokAdi().length();
+
+            String stokAdiSatir1 = "";
+            String stokAdiSatir2 = "";
+            if (stokAdiLength < 18) {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, stokAdiLength - 1);
+            } else if (stokAdiLength < 36) {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, 18);
+                stokAdiSatir2 = labelDto.getStokAdi().substring(18, stokAdiLength - 1);
+            } else {
+                stokAdiSatir1 = labelDto.getStokAdi().substring(0, 18);
+                stokAdiSatir2 = labelDto.getStokAdi().substring(18, 36);
+            }
+
+            printer.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, 5, 1, 0, 10, stokAdiSatir1, 0);
+            printer.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, 5, 1, 0, 50, stokAdiSatir2, 0);
+            if(labelDto.getBarkod().length() > 11){
+                printer.printCPCLBarcode(CPCLConst.LK_CPCL_90_ROTATION, CPCLConst.LK_CPCL_BCS_EAN13, 1, CPCLConst.LK_CPCL_BCS_1RATIO, 50, 0, 300, labelDto.getBarkod(), 0);
+            } else {
+                printer.printCPCLBarcode(CPCLConst.LK_CPCL_90_ROTATION, CPCLConst.LK_CPCL_BCS_128, 1, CPCLConst.LK_CPCL_BCS_1RATIO, 50, 0, 300, labelDto.getBarkod(), 0);
+            }
+            printer.printCPCLText(CPCLConst.LK_CPCL_90_ROTATION, 7, 0, 55, 275, labelDto.getBarkod(),0);
+
+
+
+            String beden = labelDto.getBeden();
+            if (beden != null && !beden.isEmpty()) {
+                printer.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, 7, 0, 85, 190, "BEDEN", 0);
+
+                printer.printAndroidFont(85, 210, Typeface.DEFAULT, false, false, beden, nLineWidth, 20);
+            }
+
+            String satiFiyati = String.format("%.2f", labelDto.getSatisFiyati());
+            printer.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, 5, 3, 85, 90, satiFiyati, 0);
+            int tlOteleme = (int) ((satiFiyati.length() + 0.5) * 2.2 * 8);
+            printer.printAndroidFont(85 + tlOteleme, 110, Typeface.DEFAULT, false, false, "₺", nLineWidth, 50);
+            printer.printAndroidFont(85, 170, Typeface.DEFAULT, true, false, "KDV DAHİLDİR", nLineWidth, 18);
+
+            if (labelDto.getYerliUretim() == 0) {
+                final String yerliUretimLogo = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/MobiltegDB/yerliUretim100.png";
+                try {
+                    printer.printBitmap(yerliUretimLogo,155 , 190);
+                    printer.setMedia(paperType);
+                } catch (Exception e) {
+
+                }
+
+            }
+            printer.printAndroidFont(103, 265, Typeface.DEFAULT, true, false, "Fiyat Değ.Tarihi", nLineWidth, 20);
+            String fiyatDegisiklikTarihi = getFormattedDate(labelDto.getFiyatDegTarihi().substring(0, 11));
+            printer.printAndroidFont(103, 285, Typeface.DEFAULT, true, false, fiyatDegisiklikTarihi, nLineWidth, 20);
+            printer.printAndroidFont(100, 230, Typeface.DEFAULT, true, false, "Menşei: " + labelDto.getMensei(), nLineWidth, 20);
 
             printer.printForm();
         } catch (UnsupportedEncodingException e) {
@@ -729,60 +902,38 @@ public class SewooPrinterAdapter extends IPrinterAdapter {
     public void printZuccaciyeRafEtiket(LabelDto labelDto, int count) {
 
         try {
-            int nLineWidth = 632;
-            printer.setForm(0, 632, 304, 304, count);
-            printer.setMedia(CPCLConst.LK_CPCL_BLACKMARK);
+            int nLineWidth = 570;
+            printer.setForm(0, 200, 200, 304, count);
+            printer.setPageWidth(640);
+            printer.setMedia(CPCLConst.LK_CPCL_LABEL);
+
+            // LK_CPCL_BLACKMARK
 
             // Stok Adı
-            printer.printAndroidFont(Typeface.SANS_SERIF, true, labelDto.getStokAdi(), nLineWidth, 26, 40, CPCLConst.LK_CPCL_LEFT);
+            printer.printAndroidFont(Typeface.SANS_SERIF, true, labelDto.getStokKisaAdi(), nLineWidth, 35, 20, CPCLConst.LK_CPCL_CENTER);
 
-
-            printer.printAndroidFont(Typeface.SANS_SERIF, true, "(Fiyatlara KDV Dahildir)", nLineWidth, 26, 175, CPCLConst.LK_CPCL_LEFT);
 
             // Yerli üretim logosu
             if (labelDto.getYerliUretim() == 0) {
                 final String yerliUretimLogo = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/MobilEtiket/yerliUretim120.png";
                 try {
-                    printer.printBitmap(yerliUretimLogo, 380, 70);
+                    printer.printBitmap(yerliUretimLogo, 445, 150);
                 } catch (Exception e) {
                 }
             }
 
-            // barkod
-            printer.printCPCLBarcode(CPCLConst.LK_CPCL_0_ROTATION, CPCLConst.LK_CPCL_BCS_EAN13, 1,
-                    CPCLConst.LK_CPCL_BCS_0RATIO, 40, 380, 160, labelDto.getBarkod(), 0);
-            printer.printAndroidFont(380, 200, Typeface.SANS_SERIF, true, false, labelDto.getBarkod(), nLineWidth, 20);
-
-            // Reyon kodu
-            printer.printAndroidFont(540, 202, Typeface.SANS_SERIF, false, false, labelDto.getReyon(), nLineWidth, 16);
-
-            // Satış fiyati label
-            printer.printAndroidFont(Typeface.SANS_SERIF, true, "SATIŞ", nLineWidth, 20, 100, CPCLConst.LK_CPCL_LEFT);
-            printer.printAndroidFont(Typeface.SANS_SERIF, true, "FİYATI", nLineWidth, 20, 130, CPCLConst.LK_CPCL_LEFT);
+            // Fiyat Değişim Tarihi
+            printer.printAndroidFont(Typeface.SANS_SERIF, true, "Üretim Yeri: " + labelDto.getMensei(), nLineWidth, 16, 200, CPCLConst.LK_CPCL_RIGHT);
+            printer.printAndroidFont(Typeface.SANS_SERIF, true, "Fiyat Değişim Tarihi", nLineWidth, 16, 220, CPCLConst.LK_CPCL_RIGHT);
+            String fiyatDegisiklikTarihi = getFormattedDate(labelDto.getFiyatDegTarihi().substring(0, 11));
+            printer.printAndroidFont(Typeface.SANS_SERIF, true, fiyatDegisiklikTarihi, nLineWidth, 18, 240, CPCLConst.LK_CPCL_RIGHT);
             // Satış fiyatı tutar
             String satisFiyatiStr = String.format("%.2f₺", labelDto.getSatisFiyati());
-            int tlOteleme = (int) ((satisFiyatiStr.length() + 0.5) * 2.8 * 8);
-            printer.printAndroidFont(100, 100, Typeface.SANS_SERIF, true, satisFiyatiStr, nLineWidth, 70);
-          //  printer.printAndroidFont(100 + tlOteleme, 120, Typeface.SANS_SERIF, false, false, "₺", nLineWidth, 30);
 
-            // Ayıraç
-            printer.printAndroidFont(0, 200, Typeface.SANS_SERIF, false, false,
-                    "------------------------------------------------------------", nLineWidth, 20);
+            printer.printAndroidFont(Typeface.SANS_SERIF, true, satisFiyatiStr, nLineWidth, 65, 175, CPCLConst.LK_CPCL_CENTER);
+            printer.printAndroidFont( Typeface.SANS_SERIF,  false, "FİYATLARA KDV DAHİLDİR", nLineWidth, 18,250, CPCLConst.LK_CPCL_CENTER);
 
-            // Birim Fiyat
-       //     printer.printAndroidFont(0, 170, Typeface.SANS_SERIF, false, true, "BİRİM", nLineWidth, 20);
-       //     printer.printAndroidFont(0, 200, Typeface.SANS_SERIF, false, true, "FİYATI", nLineWidth, 20);
-       //     printer.printAndroidFont(100, 175, Typeface.SANS_SERIF, false, true,
-       //             String.format("%.2f TL/%s", labelDto.getBirimFiyati(), labelDto.getBirimAdi()), nLineWidth, 40);
-            // Fiyat değişiklik tarihi
-            printer.printAndroidFont(0, 235, Typeface.SANS_SERIF, false, false, "Fiyat Değişikliği Tarihi:", nLineWidth, 18);
-            String fiyatDegisiklikTarihi = getFormattedDate(labelDto.getFiyatDegTarihi().substring(0, 11));
-            printer.printAndroidFont(180, 235, Typeface.SANS_SERIF, false, false, fiyatDegisiklikTarihi, nLineWidth, 18);
-
-            // Menşei
-            printer.printAndroidFont(380, 235, Typeface.SANS_SERIF, false, false, "Menşei:", nLineWidth, 18);
-
-            printer.printAndroidFont(450, 235, Typeface.SANS_SERIF, false, false, labelDto.getMensei(), nLineWidth, 18);
+            StringBuffer buffer = printer.getBuffer();
 
 
             printer.printForm();
@@ -792,7 +943,6 @@ public class SewooPrinterAdapter extends IPrinterAdapter {
             exception.printStackTrace();
         }
     }
-
 
     public void printIndirimliRafEtiket(LabelDto labelDto, int count) {
         try {

@@ -1,7 +1,5 @@
 package tr.com.cetinkaya.handterminal;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -21,11 +19,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -344,230 +343,244 @@ public class LabelActivity extends AppCompatActivity {
             binding.birimText.setText(String.format("%.2f TL/%s", labelDto.getBirimFiyati(), labelDto.getBirimAdi()));
         }
 
-            binding.barkodText.selectAll();
+        binding.barkodText.selectAll();
 
 
-        }
-
-        private void setTitle (BarkodTipi barkodTipi){
-            String title = "";
-            switch (barkodTipi) {
-                case BARKODSUZ_KIRMIZI_INDIRIM:
-                    title = "Kırmızı Bsuz. İndirim Etiketi";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODLU_KIRMIZI_INDIRIM:
-                    title = "Kırmızı Blu. İndirim Etiketi";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODSUZ_BEYAZ:
-                    title = "Beyaz Bsuz. Fiyat Etiketi";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.etiketLabel.setVisibility(View.GONE);
-                    binding.etiketFiyatText.setVisibility(View.GONE);
-                    break;
-                case BARKODLU_BEYAZ:
-                    title = "Beyaz Blu. Fiyat Etiketi";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.etiketLabel.setVisibility(View.GONE);
-                    binding.etiketFiyatText.setVisibility(View.GONE);
-                    break;
-                case INDIRIMLI_RAF:
-                    title = "İndirimli Raf Etiketi";
-                    binding.bedenText.setVisibility(View.GONE);
-                    binding.bedenLabel.setVisibility(View.GONE);
-                    binding.taksitLabel.setVisibility(View.GONE);
-                    binding.taksitliFiyatText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case INDIRIMSIZ_RAF:
-                    title = "Raf Etiketi";
-                    binding.bedenText.setVisibility(View.GONE);
-                    binding.bedenLabel.setVisibility(View.GONE);
-                    binding.taksitLabel.setVisibility(View.GONE);
-                    binding.taksitliFiyatText.setVisibility(View.GONE);
-                    binding.etiketLabel.setVisibility(View.GONE);
-                    binding.etiketFiyatText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-
-                case ZUCCACIYE_RAF:
-                    title = "Züccaciye Raf Etiketi";
-                    binding.bedenText.setVisibility(View.GONE);
-                    binding.bedenLabel.setVisibility(View.GONE);
-                    binding.taksitLabel.setVisibility(View.GONE);
-                    binding.taksitliFiyatText.setVisibility(View.GONE);
-                    binding.etiketLabel.setVisibility(View.GONE);
-                    binding.etiketFiyatText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-
-                case BARKODSUZ_TAKSITLI_FIYAT:
-                    title = "Barkodsuz Taks. Satış Fiyatı";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODLU_TAKSITLI_FIYAT:
-                    title = "Barkodlu Taks. Satış Fiyatı";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODLU_KIRMIZI_TAKSITLI_FIYAT:
-                    title = "Kırmızı Barkodlu Taks. Satış Fiyatı";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT:
-                    title = "Kırmızı Barkodsuz Taks. Satış Fiyatı";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-                case BARKODSUZ_KIRMIZI_50:
-                    title = "Kırmızı Barkodsuz %50 İndirim";
-                    binding.birimLabel.setVisibility(View.GONE);
-                    binding.birimText.setVisibility(View.GONE);
-                    binding.printDoubleLableCheckBox.setVisibility(View.GONE);
-                    break;
-            }
-            binding.labelActivityTitleText.setText(title);
-        }
-
-        public void closeLabelActivity (View view){
-            Intent intent = new Intent(this, ClothesMenuActivity.class);
-            if (barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF) || barkodTipi.equals(BarkodTipi.ZUCCACIYE_RAF)) {
-                intent = new Intent(this, GroceryMenuActivity.class);
-            }
-            startActivity(intent);
-            finish();
-        }
-
-        @Override
-        public void onBackPressed () {
-            Intent intent = new Intent(this, ClothesMenuActivity.class);
-            if (barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF) || barkodTipi.equals(BarkodTipi.ZUCCACIYE_RAF)) {
-                intent = new Intent(this, GroceryMenuActivity.class);
-            }
-            startActivity(intent);
-            finish();
-        }
-
-        public void printLabel (View view){
-            SewooPrinterAdapter printer = new SewooPrinterAdapter();
-            int re_val = 0;
-            int input_count = 1;
-
-            final LinearLayout linear_popup = (LinearLayout) View.inflate(this, R.layout.input_layout, null);
-            final EditText edit_input = (EditText) linear_popup.findViewById(R.id.EditTextPopup);
-
-            edit_input.setText(Integer.toString(count));
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-            alert
-                    .setTitle("Etiket Sayısı")
-                    .setView(linear_popup)
-                    .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            String input_data = edit_input.getText().toString();
-                            count = check_data(input_data);
-
-                            switch (barkodTipi) {
-                                case BARKODSUZ_KIRMIZI_INDIRIM:
-                                    if (binding.printDoubleLableCheckBox.isChecked()) {
-                                    } else {
-                                        printer.printBarkodsuzKirmiziEtiket(labelDto, count);
-                                    }
-
-                                    break;
-                                case BARKODLU_KIRMIZI_INDIRIM:
-                                    printer.printBarkodluKirmiziEtiket(labelDto, count);
-                                    break;
-                                case BARKODSUZ_BEYAZ:
-                                    if (binding.printDoubleLableCheckBox.isChecked()) {
-                                        count = (int) Math.ceil(count / 2.0);
-                                        printer.printCiftBarkodsuzBeyazEtiket(labelDto, count);
-                                    } else {
-                                        printer.printBarkodsuzBeyazEtiket(labelDto, count);
-                                    }
-                                    break;
-                                case BARKODLU_BEYAZ:
-                                    if (binding.printDoubleLableCheckBox.isChecked()) {
-                                        count = (int) Math.ceil(count / 2.0);
-                                        printer.printCiftBarkodluBeyazEtiket(labelDto, count);
-                                    } else {
-                                        printer.printBarkodluBeyazEtiket(labelDto, count);
-                                    }
-                                    break;
-                                case BARKODSUZ_TAKSITLI_FIYAT:
-                                    printer.printBarkodsuzTaksitliEtiket(labelDto, count);
-                                    break;
-                                case BARKODLU_TAKSITLI_FIYAT:
-                                    printer.printBarkodluTaksitliEtiket(labelDto, count);
-                                    break;
-                                case BARKODLU_KIRMIZI_TAKSITLI_FIYAT:
-                                    printer.printKirmiziBarkodluTaksitliEtiket(labelDto, count);
-                                    break;
-                                case BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT:
-                                    printer.printKirimiziBarkodsuzTaksitliEtiket(labelDto, count);
-                                    break;
-                                case INDIRIMSIZ_RAF:
-                                    printer.printIndirimsizRafEtiket(labelDto, count);
-                                    break;
-                                case ZUCCACIYE_RAF:
-                                    printer.printZuccaciyeRafEtiket(labelDto, count);
-                                    break;
-                                case INDIRIMLI_RAF:
-                                    printer.printIndirimliRafEtiket(labelDto, count);
-                                    break;
-                                case BARKODSUZ_KIRMIZI_50:
-                                    printer.printIndirimliRafEtiket_50(labelDto, count);
-                                    break;
-                                case BARKODLU_KIRMIZI_50:
-                                    printer.printBarkodluKirmiziEtiket_50(labelDto, count);
-                                    break;
-                                case BARKODLU_KIRMIZI_TAKSITLI_50:
-                                    printer.printKirmiziBarkodluTaksitliEtiket_50(labelDto, count);
-                                    break;
-                                case BARKODSUZ_KIRMIZI_TAKSITLI_50:
-                                    printer.printKirimiziBarkodsuzTaksitliEtiket_50(labelDto, count);
-                                    break;
-
-                            }
-
-
-                        }
-                    })
-                    .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }).show();
-
-
-        }
-
-
-        public int check_data (String str){
-            int input_num;
-
-            if (str.equals(""))
-                input_num = 1;
-            else
-                input_num = Integer.parseInt(str);
-
-            return input_num;
-        }
     }
+
+    private void setTitle(BarkodTipi barkodTipi) {
+        String title = "";
+        switch (barkodTipi) {
+            case BARKODSUZ_KIRMIZI_INDIRIM:
+                title = "Kırmızı Bsuz. İndirim Etiketi";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODLU_KIRMIZI_INDIRIM:
+                title = "Kırmızı Blu. İndirim Etiketi";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODSUZ_BEYAZ:
+                title = "Beyaz Bsuz. Fiyat Etiketi";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.etiketLabel.setVisibility(View.GONE);
+                binding.etiketFiyatText.setVisibility(View.GONE);
+                break;
+            case BARKODLU_BEYAZ:
+                title = "Beyaz Blu. Fiyat Etiketi";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.etiketLabel.setVisibility(View.GONE);
+                binding.etiketFiyatText.setVisibility(View.GONE);
+                break;
+            case DIKEY_BARKODLU_BEYAZ:
+                title = "Dikey Beyaz Blu. Etiket";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.etiketLabel.setVisibility(View.GONE);
+                binding.etiketFiyatText.setVisibility(View.GONE);
+                break;
+            case INDIRIMLI_RAF:
+                title = "İndirimli Raf Etiketi";
+                binding.bedenText.setVisibility(View.GONE);
+                binding.bedenLabel.setVisibility(View.GONE);
+                binding.taksitLabel.setVisibility(View.GONE);
+                binding.taksitliFiyatText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case INDIRIMSIZ_RAF:
+                title = "Raf Etiketi";
+                binding.bedenText.setVisibility(View.GONE);
+                binding.bedenLabel.setVisibility(View.GONE);
+                binding.taksitLabel.setVisibility(View.GONE);
+                binding.taksitliFiyatText.setVisibility(View.GONE);
+                binding.etiketLabel.setVisibility(View.GONE);
+                binding.etiketFiyatText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+
+            case ZUCCACIYE_RAF:
+                title = "Züccaciye Raf Etiketi";
+                binding.bedenText.setVisibility(View.GONE);
+                binding.bedenLabel.setVisibility(View.GONE);
+                binding.taksitLabel.setVisibility(View.GONE);
+                binding.taksitliFiyatText.setVisibility(View.GONE);
+                binding.etiketLabel.setVisibility(View.GONE);
+                binding.etiketFiyatText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+
+            case BARKODSUZ_TAKSITLI_FIYAT:
+                title = "Barkodsuz Taks. Satış Fiyatı";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODLU_TAKSITLI_FIYAT:
+                title = "Barkodlu Taks. Satış Fiyatı";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODLU_KIRMIZI_TAKSITLI_FIYAT:
+                title = "Kırmızı Barkodlu Taks. Satış Fiyatı";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT:
+                title = "Kırmızı Barkodsuz Taks. Satış Fiyatı";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+            case BARKODSUZ_KIRMIZI_50:
+                title = "Kırmızı Barkodsuz %50 İndirim";
+                binding.birimLabel.setVisibility(View.GONE);
+                binding.birimText.setVisibility(View.GONE);
+                binding.printDoubleLableCheckBox.setVisibility(View.GONE);
+                break;
+        }
+        binding.labelActivityTitleText.setText(title);
+    }
+
+    public void closeLabelActivity(View view) {
+        Intent intent = new Intent(this, ClothesMenuActivity.class);
+        if (barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF) || barkodTipi.equals(BarkodTipi.ZUCCACIYE_RAF)) {
+            intent = new Intent(this, GroceryMenuActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, ClothesMenuActivity.class);
+        if (barkodTipi.equals(BarkodTipi.INDIRIMLI_RAF) || barkodTipi.equals(BarkodTipi.INDIRIMSIZ_RAF) || barkodTipi.equals(BarkodTipi.ZUCCACIYE_RAF)) {
+            intent = new Intent(this, GroceryMenuActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
+    public void printLabel(View view) {
+        SewooPrinterAdapter printer = new SewooPrinterAdapter();
+        int re_val = 0;
+        int input_count = 1;
+
+        final LinearLayout linear_popup = (LinearLayout) View.inflate(this, R.layout.input_layout, null);
+        final EditText edit_input = (EditText) linear_popup.findViewById(R.id.EditTextPopup);
+
+        edit_input.setText(Integer.toString(count));
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert
+                .setTitle("Etiket Sayısı")
+                .setView(linear_popup)
+                .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String input_data = edit_input.getText().toString();
+                        count = check_data(input_data);
+
+                        switch (barkodTipi) {
+                            case BARKODSUZ_KIRMIZI_INDIRIM:
+                                if (binding.printDoubleLableCheckBox.isChecked()) {
+                                } else {
+                                    printer.printBarkodsuzKirmiziEtiket(labelDto, count);
+                                }
+
+                                break;
+                            case BARKODLU_KIRMIZI_INDIRIM:
+                                printer.printBarkodluKirmiziEtiket(labelDto, count);
+                                break;
+                            case BARKODSUZ_BEYAZ:
+                                if (binding.printDoubleLableCheckBox.isChecked()) {
+                                    count = (int) Math.ceil(count / 2.0);
+                                    printer.printCiftBarkodsuzBeyazEtiket(labelDto, count);
+                                } else {
+                                    printer.printBarkodsuzBeyazEtiket(labelDto, count);
+                                }
+                                break;
+                            case BARKODLU_BEYAZ:
+                                if (binding.printDoubleLableCheckBox.isChecked()) {
+                                    count = (int) Math.ceil(count / 2.0);
+                                    printer.printCiftBarkodluBeyazEtiket(labelDto, count);
+                                } else {
+                                    printer.printBarkodluBeyazEtiket(labelDto, count);
+                                }
+                                break;
+                            case DIKEY_BARKODLU_BEYAZ:
+                                printer.printDikeyBarkodluBeyazEtiket(labelDto, count);
+                                break;
+
+                            case DIKEY_BARKODLU_KIRMIZI_INDIRIM:
+                                printer.printDikeyKirmiziBarkodluTaksitliEtiket(labelDto, count);
+                                break;
+                            case BARKODSUZ_TAKSITLI_FIYAT:
+                                printer.printBarkodsuzTaksitliEtiket(labelDto, count);
+                                break;
+                            case BARKODLU_TAKSITLI_FIYAT:
+                                printer.printBarkodluTaksitliEtiket(labelDto, count);
+                                break;
+                            case BARKODLU_KIRMIZI_TAKSITLI_FIYAT:
+                                printer.printKirmiziBarkodluTaksitliEtiket(labelDto, count);
+                                break;
+                            case BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT:
+                                printer.printKirimiziBarkodsuzTaksitliEtiket(labelDto, count);
+                                break;
+                            case INDIRIMSIZ_RAF:
+                                printer.printIndirimsizRafEtiket(labelDto, count);
+                                break;
+                            case ZUCCACIYE_RAF:
+                                printer.printZuccaciyeRafEtiket(labelDto, count);
+                                break;
+                            case INDIRIMLI_RAF:
+                                printer.printIndirimliRafEtiket(labelDto, count);
+                                break;
+                            case BARKODSUZ_KIRMIZI_50:
+                                printer.printIndirimliRafEtiket_50(labelDto, count);
+                                break;
+                            case BARKODLU_KIRMIZI_50:
+                                printer.printBarkodluKirmiziEtiket_50(labelDto, count);
+                                break;
+                            case BARKODLU_KIRMIZI_TAKSITLI_50:
+                                printer.printKirmiziBarkodluTaksitliEtiket_50(labelDto, count);
+                                break;
+                            case BARKODSUZ_KIRMIZI_TAKSITLI_50:
+                                printer.printKirimiziBarkodsuzTaksitliEtiket_50(labelDto, count);
+                                break;
+
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+
+
+    }
+
+
+    public int check_data(String str) {
+        int input_num;
+
+        if (str.equals(""))
+            input_num = 1;
+        else
+            input_num = Integer.parseInt(str);
+
+        return input_num;
+    }
+}
