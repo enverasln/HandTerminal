@@ -122,6 +122,15 @@ public class StokSQLiteDao implements IStokDao {
 
     }
 
+    @Override
+    public void deleteAllStok() {
+        try {
+            sqLiteDatabase.delete(SQLiteHelper.STOKLAR, null, null);
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage()); 
+        }
+    }
+
     private ContentValues getContentValues(Stok stok) {
         ContentValues values = new ContentValues();
         values.put("sto_guid", stok.getSto_guid());

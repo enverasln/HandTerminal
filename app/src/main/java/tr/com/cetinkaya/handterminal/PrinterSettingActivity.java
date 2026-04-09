@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -307,15 +308,12 @@ public class PrinterSettingActivity extends AppCompatActivity {
             }
         };
 
-        registerReceiver(discoveryResult, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-
         searchStart = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //Toast.makeText(mainView, "블루투스 기기 검색 시작", Toast.LENGTH_SHORT).show();
             }
         };
-        registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
 
         searchFinish = new BroadcastReceiver() {
             @Override
@@ -323,7 +321,29 @@ public class PrinterSettingActivity extends AppCompatActivity {
                 searchflags = true;
             }
         };
-        registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+
+        if(Build.VERSION.SDK_INT >=33) {
+            registerReceiver(discoveryResult,
+                    new IntentFilter(BluetoothDevice.ACTION_FOUND),
+                    Context.RECEIVER_EXPORTED);
+
+            registerReceiver(searchStart,
+                    new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED),
+                    Context.RECEIVER_EXPORTED);
+
+            registerReceiver(searchFinish,
+                    new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED),
+                    Context.RECEIVER_EXPORTED);
+
+        } else {
+            registerReceiver(discoveryResult, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
+
+            registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
+
+
+            registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        }
     }
 
     private void addPairedDevices() {
@@ -460,8 +480,20 @@ public class PrinterSettingActivity extends AppCompatActivity {
 
                 saveSettingFile();
 
-                registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-                registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+                if(Build.VERSION.SDK_INT >= 33) {
+                    registerReceiver(connectDevice,
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED),
+                            Context.RECEIVER_EXPORTED);
+
+                    registerReceiver(connectDevice,
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED),
+                            Context.RECEIVER_EXPORTED);
+                } else {
+                    registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+                    registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+                }
+
+
 
                 /*Intent in = new Intent(PrinterSettingActivity.this, HomeActivity.class);
                 in.putExtra("Connection", "BlueTooth");

@@ -10,4 +10,6 @@ public interface IBarkodDao {
     int updateBarkod(Barkod barkod);
 
     void insertBarkod(Barkod barkod);
+
+    void deleteAllBarkod();
 }

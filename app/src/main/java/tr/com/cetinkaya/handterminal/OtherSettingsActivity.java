@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class OtherSettingsActivity extends AppCompatActivity {
 //    private Object editTextTextPersonName;
 
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,10 +50,25 @@ public class OtherSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_other_settings);
 
         mgr = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        registerReceiver(onComplete,
-                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        registerReceiver(onNotificationClick,
-                new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+
+        if(Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(onComplete,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                    Context.RECEIVER_EXPORTED);
+
+            registerReceiver(onNotificationClick,
+                    new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED),
+                    Context.RECEIVER_EXPORTED);
+        } else {
+
+            registerReceiver(onComplete,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            registerReceiver(onNotificationClick,
+                    new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+        }
+
+
+
     }
 
     @Override

@@ -32,4 +32,9 @@ public class BarkodBO implements IBarkodBO {
     public void insertBarkod(Barkod barkod) {
         barkodDao.insertBarkod(barkod);
     }
+
+    @Override
+    public void deleteAllBarkod() {
+        barkodDao.deleteAllBarkod();
+    }
 }

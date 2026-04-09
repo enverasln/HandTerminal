@@ -13,4 +13,6 @@ public interface IStokDao  {
     int updateStok(Stok stok);
 
     Stok getStokByStokKod(String stokKod);
+
+    void deleteAllStok();
 }

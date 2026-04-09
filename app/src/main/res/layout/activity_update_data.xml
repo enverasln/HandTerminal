@@ -58,22 +58,23 @@
         app:layout_constraintTop_toTopOf="@+id/magazaAdiLabel"
         app:layout_row="0" />
 
+
     <TextView
         android:id="@+id/stokAktarimAdetText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="24dp"
         android:focusable="false"
         android:textColor="@color/gray_500"
         android:textSize="14sp"
         app:layout_column="1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/depoCheckBox"
         app:layout_row="0" />
-
 
     <TextView
         android:id="@+id/barkodAktarimAdetText"
@@ -157,8 +158,7 @@
             android:id="@+id/updateDataActivityTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="38dp"
             android:layout_toEndOf="@+id/closeLabelActivtyImage"
             android:focusable="false"
             android:text="Veri Güncelleme"
@@ -169,7 +169,7 @@
 
     <CheckBox
         android:id="@+id/stokCheckBox"
-        android:layout_width="125dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
@@ -181,6 +181,46 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/magazaAdiLabel" />
+
+    <CheckBox
+        android:id="@+id/stokDeleteCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="Tabloyu Sil"
+        android:textColor="@color/blue_200"
+        android:textColorLink="@color/blue_200"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/stokCheckBox"
+        app:layout_constraintTop_toBottomOf="@+id/magazaAdiLabel" />
+
+    <CheckBox
+        android:id="@+id/barkodDeleteCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="Tabloyu Sil"
+        android:textColor="@color/blue_200"
+        android:textColorLink="@color/blue_200"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/stokCheckBox"
+        app:layout_constraintTop_toTopOf="@+id/barkodCheckBox" />
+
+    <CheckBox
+        android:id="@+id/fiyatDeleteCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="Tabloyu Sil"
+        android:textColor="@color/blue_200"
+        android:textColorLink="@color/blue_200"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/stokCheckBox"
+        app:layout_constraintTop_toTopOf="@+id/fiyatCheckBox" />
 
     <Button
         android:id="@+id/stokTarihButton"
@@ -228,7 +268,7 @@
 
     <CheckBox
         android:id="@+id/barkodCheckBox"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:checked="true"
@@ -242,7 +282,7 @@
 
     <CheckBox
         android:id="@+id/fiyatCheckBox"
-        android:layout_width="125dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"

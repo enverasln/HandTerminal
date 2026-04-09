@@ -133,6 +133,15 @@ public class BarkodSQLiteDao implements IBarkodDao {
 
     }
 
+    @Override
+    public void deleteAllBarkod() {
+        try {
+            sqLiteDatabase.delete(SQLiteHelper.BARKOD_TANIMLARI, null, null);
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+    }
+
     private ContentValues getContentValues(Barkod barkod) {
         ContentValues values = new ContentValues();
         values.put(SQLiteHelper.BAR_GUID, barkod.getBar_guid());

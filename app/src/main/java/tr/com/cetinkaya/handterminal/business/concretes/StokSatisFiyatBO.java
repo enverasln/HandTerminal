@@ -43,4 +43,9 @@ public class StokSatisFiyatBO implements IStokSatisFiyatBO {
     public void insertSatisFiyat(StokSatisFiyat newSFiyat) {
         satisFiyatDao.insertSatisFiyat(newSFiyat);
     }
+
+    @Override
+    public void deleteAllFiyat() {
+        satisFiyatDao.deleteAllFiyat();
+    }
 }

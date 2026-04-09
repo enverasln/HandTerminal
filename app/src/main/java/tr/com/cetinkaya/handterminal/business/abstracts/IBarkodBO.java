@@ -10,4 +10,6 @@ public interface IBarkodBO {
     int updateBarkod(Barkod newBarkod);
 
     void insertBarkod(Barkod newBarkod);
+
+    void deleteAllBarkod();
 }

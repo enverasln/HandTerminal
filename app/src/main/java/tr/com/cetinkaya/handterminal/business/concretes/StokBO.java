@@ -33,5 +33,10 @@ public class StokBO implements IStokBO {
         return stokDao.getStokByStokKod(stokKod);
     }
 
+    @Override
+    public void deleteAllStok() {
+        stokDao.deleteAllStok();
+    }
+
 
 }

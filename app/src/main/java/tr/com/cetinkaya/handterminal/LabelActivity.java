@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
@@ -52,7 +53,9 @@ public class LabelActivity extends AppCompatActivity {
     private BarkodTipi barkodTipi;
     private int etiketDepoNo = 24;
     private int depoNo;
+    private int aktif;
     private SharedPreferences sharedPreferences;
+    private int position = 0;
 
     SQLiteHelper sqLiteHelper;
     SQLiteDatabase db;
@@ -80,6 +83,14 @@ public class LabelActivity extends AppCompatActivity {
         Intent intent = getIntent();
         barkodTipi = (BarkodTipi) intent.getSerializableExtra("barkodTipi");
         depoNo = sharedPreferences.getInt("depoNo", 1);
+        aktif = sharedPreferences.getInt("aktif", 1);
+
+        if (aktif == 2) {
+            position = 65;
+        } else {
+            position = 0;
+        }
+
         setTitle(barkodTipi);
 
         sqLiteHelper = new SQLiteHelper(LabelActivity.this);
@@ -263,8 +274,19 @@ public class LabelActivity extends AppCompatActivity {
 
                 str_SavedBT = str_temp;
 
-                registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-                registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+                if (Build.VERSION.SDK_INT >= 33) {
+                    registerReceiver(connectDevice,
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED),
+                            Context.RECEIVER_EXPORTED);
+                    registerReceiver(connectDevice,
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED),
+                            Context.RECEIVER_EXPORTED);
+                } else {
+                    registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+                    registerReceiver(connectDevice, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+                }
+
+
 
                 /*Intent in = new Intent(PrinterSettingActivity.this, HomeActivity.class);
                 in.putExtra("Connection", "BlueTooth");
@@ -493,47 +515,47 @@ public class LabelActivity extends AppCompatActivity {
                             case BARKODSUZ_KIRMIZI_INDIRIM:
                                 if (binding.printDoubleLableCheckBox.isChecked()) {
                                 } else {
-                                    printer.printBarkodsuzKirmiziEtiket(labelDto, count);
+                                    printer.printBarkodsuzKirmiziEtiket(labelDto, count, position);
                                 }
 
                                 break;
                             case BARKODLU_KIRMIZI_INDIRIM:
-                                printer.printBarkodluKirmiziEtiket(labelDto, count);
+                                printer.printBarkodluKirmiziEtiket(labelDto, count, position);
                                 break;
                             case BARKODSUZ_BEYAZ:
                                 if (binding.printDoubleLableCheckBox.isChecked()) {
                                     count = (int) Math.ceil(count / 2.0);
-                                    printer.printCiftBarkodsuzBeyazEtiket(labelDto, count);
+                                    printer.printCiftBarkodsuzBeyazEtiket(labelDto, count, position);
                                 } else {
-                                    printer.printBarkodsuzBeyazEtiket(labelDto, count);
+                                    printer.printBarkodsuzBeyazEtiket(labelDto, count, position);
                                 }
                                 break;
                             case BARKODLU_BEYAZ:
                                 if (binding.printDoubleLableCheckBox.isChecked()) {
                                     count = (int) Math.ceil(count / 2.0);
-                                    printer.printCiftBarkodluBeyazEtiket(labelDto, count);
+                                    printer.printCiftBarkodluBeyazEtiket(labelDto, count, position);
                                 } else {
-                                    printer.printBarkodluBeyazEtiket(labelDto, count);
+                                    printer.printBarkodluBeyazEtiket(labelDto, count, position);
                                 }
                                 break;
                             case DIKEY_BARKODLU_BEYAZ:
-                                printer.printDikeyBarkodluBeyazEtiket(labelDto, count);
+                                printer.printDikeyBarkodluBeyazEtiket(labelDto, count, position);
                                 break;
 
                             case DIKEY_BARKODLU_KIRMIZI_INDIRIM:
-                                printer.printDikeyKirmiziBarkodluTaksitliEtiket(labelDto, count);
+                                printer.printDikeyKirmiziBarkodluTaksitliEtiket(labelDto, count, position);
                                 break;
                             case BARKODSUZ_TAKSITLI_FIYAT:
-                                printer.printBarkodsuzTaksitliEtiket(labelDto, count);
+                                printer.printBarkodsuzTaksitliEtiket(labelDto, count, position);
                                 break;
                             case BARKODLU_TAKSITLI_FIYAT:
-                                printer.printBarkodluTaksitliEtiket(labelDto, count);
+                                printer.printBarkodluTaksitliEtiket(labelDto, count, position);
                                 break;
                             case BARKODLU_KIRMIZI_TAKSITLI_FIYAT:
-                                printer.printKirmiziBarkodluTaksitliEtiket(labelDto, count);
+                                printer.printKirmiziBarkodluTaksitliEtiket(labelDto, count, position);
                                 break;
                             case BARKODSUZ_KIRMIZI_TAKSITLI_FIYAT:
-                                printer.printKirimiziBarkodsuzTaksitliEtiket(labelDto, count);
+                                printer.printKirimiziBarkodsuzTaksitliEtiket(labelDto, count, position);
                                 break;
                             case INDIRIMSIZ_RAF:
                                 printer.printIndirimsizRafEtiket(labelDto, count);
@@ -548,13 +570,13 @@ public class LabelActivity extends AppCompatActivity {
                                 printer.printIndirimliRafEtiket_50(labelDto, count);
                                 break;
                             case BARKODLU_KIRMIZI_50:
-                                printer.printBarkodluKirmiziEtiket_50(labelDto, count);
+                                printer.printBarkodluKirmiziEtiket_50(labelDto, count, position);
                                 break;
                             case BARKODLU_KIRMIZI_TAKSITLI_50:
-                                printer.printKirmiziBarkodluTaksitliEtiket_50(labelDto, count);
+                                printer.printKirmiziBarkodluTaksitliEtiket_50(labelDto, count, position);
                                 break;
                             case BARKODSUZ_KIRMIZI_TAKSITLI_50:
-                                printer.printKirimiziBarkodsuzTaksitliEtiket_50(labelDto, count);
+                                printer.printKirimiziBarkodsuzTaksitliEtiket_50(labelDto, count, position);
                                 break;
 
                         }

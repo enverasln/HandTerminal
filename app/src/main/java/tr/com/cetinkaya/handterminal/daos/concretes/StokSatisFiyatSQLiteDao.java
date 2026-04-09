@@ -179,6 +179,16 @@ public class StokSatisFiyatSQLiteDao implements IStokSatisFiyatDao {
             ContentValues values = getContentValues(satisFiyat);
             sqLiteDatabase.insert(SQLiteHelper.STOK_SATIS_FIYAT_LISTELERI, null, values);
 
+
+        } catch (Exception exception) {
+            Log.e(TAG, exception.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteAllFiyat() {
+        try {
+            sqLiteDatabase.delete(SQLiteHelper.STOK_SATIS_FIYAT_LISTELERI, null, null);
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
         }

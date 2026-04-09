@@ -243,8 +243,10 @@ public class UpdateDataActivity extends AppCompatActivity {
 
         makeVisibleInformationLabels();
 
+        deleteData();
 
         if (binding.stokCheckBox.isChecked()) {
+
             new GettingAllStok(binding.stokTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "stoklar");
         } else if (binding.barkodCheckBox.isChecked()) {
             new GettingAllBarkod(binding.barkodTarihButton.getText().toString(), 0, 0).execute(Helper.API_URL + "barkodlar");
@@ -255,6 +257,26 @@ public class UpdateDataActivity extends AppCompatActivity {
         } else if (binding.depoCheckBox.isChecked()) {
             new GettingAllDepo(0).execute(Helper.API_URL + "depolar");
         }
+
+    }
+
+    public void deleteData() {
+
+        if(binding.stokDeleteCheckBox.isChecked()) {
+            stokBO.deleteAllStok();
+            binding.stokTarihButton.setText("01/01/1970");
+        }
+
+        if(binding.barkodDeleteCheckBox.isChecked()) {
+            barkodBO.deleteAllBarkod();
+            binding.barkodTarihButton.setText("01/01/1970");
+        }
+
+        if(binding.fiyatDeleteCheckBox.isChecked()) {
+            stokSatisFiyatBO.deleteAllFiyat();
+            binding.fiyatTarihButton.setText("01/01/1970");
+        }
+
 
     }
 

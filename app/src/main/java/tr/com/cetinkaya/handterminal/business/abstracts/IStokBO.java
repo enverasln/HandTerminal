@@ -1,7 +1,5 @@
 package tr.com.cetinkaya.handterminal.business.abstracts;
 
-import java.util.List;
-
 import tr.com.cetinkaya.handterminal.models.Stok;
 
 public interface IStokBO {
@@ -13,4 +11,6 @@ public interface IStokBO {
     int updateStok(Stok stok);
 
     Stok getStokByStokKod(String stokKod);
+
+    void deleteAllStok();
 }

@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -156,16 +157,12 @@ public class BluetoothHelper {
             }
         };
 
-        context.registerReceiver(disconnectReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-
         searchStart = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
             }
         };
-
-        context.registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
 
         searchFinish = new BroadcastReceiver() {
             @Override
@@ -174,7 +171,27 @@ public class BluetoothHelper {
             }
         };
 
-        context.registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        if(Build.VERSION.SDK_INT >= 33) {
+            context.registerReceiver(disconnectReceiver,
+                    new IntentFilter(BluetoothDevice.ACTION_FOUND),
+                    Context.RECEIVER_EXPORTED);
+
+            context.registerReceiver(searchStart,
+                    new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED),
+                    Context.RECEIVER_EXPORTED);
+
+            context.registerReceiver(searchFinish,
+                    new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED),
+                    Context.RECEIVER_EXPORTED);
+        } else {
+            context.registerReceiver(disconnectReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
+            context.registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
+
+            context.registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        }
+
+
     }
 
 

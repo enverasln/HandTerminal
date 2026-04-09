@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             sharedPreferences.edit().putString("loggedUser", kullanici.getKullanciadi()).apply();
             sharedPreferences.edit().putString("userDepo", kullanici.getDepo().getDep_adi()).apply();
             sharedPreferences.edit().putInt("depoNo", kullanici.getDepo().getDep_no()).apply();
+            sharedPreferences.edit().putInt("aktif", kullanici.getAktif()).apply();
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();

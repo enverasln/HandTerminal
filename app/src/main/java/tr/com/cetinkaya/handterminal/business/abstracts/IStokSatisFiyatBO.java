@@ -16,4 +16,6 @@ public interface IStokSatisFiyatBO {
     int updateSatifFiyat(StokSatisFiyat newSFiyat);
 
     void insertSatisFiyat(StokSatisFiyat newSFiyat);
+
+    void deleteAllFiyat();
 }
